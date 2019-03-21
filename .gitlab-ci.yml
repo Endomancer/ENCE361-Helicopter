@@ -1,0 +1,28 @@
+image: naro/tiva-build
+
+stages:
+  - configure
+  - build
+
+configure:
+  stage: configure
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - build/
+
+build:
+  stage: build
+  script:
+    - cd build
+    - make -j
+    - make binary
+  artifacts:
+    expire_in: 1 day
+    paths:
+    - build/*.axf
+    - build/*.bin
