@@ -1,4 +1,4 @@
-image: naro/tiva-build:0.1
+image: naro/tiva-build
 
 stages:
   - configure
