@@ -12,6 +12,7 @@
 #include "uart.h"
 
 #define MAX_HEIGHT 993 // Corresponds to ~0.8 V
+#define NUM_STATES 3
 
 enum displayState
 {
@@ -86,7 +87,7 @@ int main(void)
         // ALTITUDE -> MEAN_ADC -> OFF
         if (checkButton(UP) == PUSHED)
         {
-            disp = (disp + 1) % 3;
+            disp = (disp + 1) % NUM_STATES;
             clearDisplay();
         }
 
