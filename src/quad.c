@@ -35,7 +35,7 @@ void initQaud()
     resetQuad(); 
 }
 
-// Reset quadPos to zero
+// Reset position to zero
 void resetQuad()
 {
     quadPos = 0;
@@ -53,11 +53,10 @@ void QuadIntHandler()
     uint32_t intStatus = 0;
 
     // Lookup table of directions (CW (+ve) or CCW (-ve)) according to the change in reference points over sample steps
-    static int8_t lookup[] = {
-        0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0
-    };
+    static int8_t lookup[] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
 
-    intStatus = GPIOIntStatus(GPIO_PORTB_BASE, true); //Trigger the interrupt when an event occurs
+    // Store interrupt status and clear interrupts
+    intStatus = GPIOIntStatus(GPIO_PORTB_BASE, true);
     GPIOIntClear(GPIO_PORTB_BASE, intStatus);
 
     if (intStatus & (GPIO_INT_PIN_0 | GPIO_INT_PIN_1)) {
@@ -70,7 +69,7 @@ void QuadIntHandler()
         // Increment/decrement position according to the lookup table
         quadPos += lookup[value];
 
-        // Ensure the position remains within limits [0 to ROT_COUNT]
+        // Ensure position remains in range from 0 to ROT_COUNT, wrapping if limits are exceeded
         quadPos -= quadPos >= ROT_COUNT ? ROT_COUNT : 0;
         quadPos += quadPos < 0 ? ROT_COUNT : 0;
     }
