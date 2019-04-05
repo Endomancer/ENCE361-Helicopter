@@ -11,39 +11,40 @@
 #define SLOT_COUNT (112) // Number of slots in disk
 #define ROT_COUNT (SLOT_COUNT * 4) // State changes per rotation
 
-static int32_t quadCount;
+static int32_t quadPos;
 
+// Initialise the port/pins for GPIO with the quadrotor int handler
 void initQaud()
-//Initialise the port/pins for GPIO with the quadrotor int handler
 {
     // Enable port B
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-
+    // Configure pins
     GPIOPadConfigSet(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
-    
+    // Configure pins as inputs
     GPIOPinTypeGPIOInput(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
+    // Setup interrupt type
     GPIOIntTypeSet(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_BOTH_EDGES);
-
-    //Register the quadrotor int handler with the relevant GPIO pins
+    // Register the quadrotor interrupt handler
     GPIOIntRegister(GPIO_PORTB_BASE, QuadIntHandler); 
-
+    
+    // Enable interrupts
     GPIOIntEnable(GPIO_PORTB_BASE, GPIO_INT_PIN_0 | GPIO_INT_PIN_1);
 
-    //initialise quadCount at 0
+    // Initialise quadPos
     resetQuad(); 
 }
 
+// Reset quadPos to zero
 void resetQuad()
-//Reset quadCount to zero
 {
-    quadCount = 0;
+    quadPos = 0;
 }
 
+// Returns quadPos translated into degrees of rotation
 uint32_t getQuadAngle()
-//Returns quadCount translated into degrees of rotation
 {
-    return (uint32_t) quadCount * 360 / ROT_COUNT;
+    return (uint32_t) quadPos * 360 / ROT_COUNT;
 }
 
 void QuadIntHandler()
@@ -60,14 +61,17 @@ void QuadIntHandler()
     GPIOIntClear(GPIO_PORTB_BASE, intStatus);
 
     if (intStatus & (GPIO_INT_PIN_0 | GPIO_INT_PIN_1)) {
-        value <<= 2;            // bit shifting previous value of value
-        value &= 0b1100;        // masking two bits
+        value &= 0b11; // Mask off two rightmost bits (previous value)
+        value <<= 2; // Shift previous value left
+
+        // Read encoder pins and concatenate with previous value to form a 4-bit pattern
         value |= GPIOPinRead(GPIO_PORTB_BASE, GPIO_INT_PIN_0 | GPIO_INT_PIN_1);
-        quadCount += lookup[value];      // Iterates quadCount CW or CCW according to the direction in the lookup table
 
+        // Increment/decrement position according to the lookup table
+        quadPos += lookup[value];
 
-        // Reset qaudCount to 0 if it gets to the end of a full rotation either way
-        if (quadCount >= ROT_COUNT) { quadCount -= ROT_COUNT ; } 
-        else if (quadCount < 0) { quadCount += ROT_COUNT; }
+        // Ensure the position remains within limits [0 to ROT_COUNT]
+        quadPos -= quadPos >= ROT_COUNT ? ROT_COUNT : 0;
+        quadPos += quadPos < 0 ? ROT_COUNT : 0;
     }
 }
