@@ -3,16 +3,19 @@
 
 #include <stdint.h>
 
-// Initialise the quadrotor port/pins, and interrupt handler
+// Initialise the quadrotor GPIO and interrupt handler
+// Interrupts occur when either PB0 or PB1 change state
 void initQaud(void);
 
-// Reset the value of the quadrotor slit counter variable to zero
+// Reset the quadrotor slit position to zero
 void resetQuad(void);
 
 // Converts the quadrotor slit counter to a value in degrees (of rotation of the helicopter)
 uint32_t getQuadAngle(void);
 
-// Iterates the quadrotor slit counter on an event, positively for CW, negatively for CCW
+// Update the position counter when an interrupt occurs
+// Rotating clockwise increments the position
+// Rotating counterclockwise decrements the position
 void QuadIntHandler(void);
 
 #endif
