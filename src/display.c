@@ -42,3 +42,14 @@ void displayAltitude(int16_t altitude)
     // Update line on display.
     OLEDStringDraw(string, 0, 1);
 }
+
+void displayAngle(int16_t angle)
+{
+    char string[17]; // 16 characters across the display
+
+    // Form a new string for the line.  The maximum width specified for the
+    // number field ensures it is displayed right justified.
+    usnprintf(string, sizeof(string), "Angle = %3d deg", angle);
+    // Update line on display.
+    OLEDStringDraw(string, 0, 2);
+}

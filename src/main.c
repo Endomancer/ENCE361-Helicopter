@@ -10,6 +10,7 @@
 #include "clock.h"
 #include "display.h"
 #include "uart.h"
+#include "quad.h"
 
 #define MAX_HEIGHT 993 // Corresponds to ~0.8 V
 #define NUM_STATES 3
@@ -50,6 +51,7 @@ calibrate()
 
     sum += average();
     clearDisplay();
+    resetQuad();
 
     return sum / 4;
 }
@@ -68,6 +70,7 @@ int main(void)
     initUART();
     initSysTick();
     initDisplay();
+    initQaud();
 
     // Enable interrupts
     IntMasterEnable();
@@ -112,10 +115,12 @@ int main(void)
         {
         case ALTITUDE:
             displayAltitude(height);
+            displayAngle(getQuadAngle());
             break;
 
         case MEAN_ADC:
-            displayMeanVal(ADCValue);
+            //displayMeanVal(ADCValue);
+            displayMeanVal(getQuadAngle());
             break;
 
         case OFF:

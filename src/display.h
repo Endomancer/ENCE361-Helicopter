@@ -17,4 +17,6 @@ void displayMeanVal(int16_t meanVal);
 
 void displayAltitude(int16_t altitude);
 
+void displayAngle(int16_t angle);
+
 #endif
