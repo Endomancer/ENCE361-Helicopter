@@ -12,8 +12,9 @@ include(tm4c123gh6pm)
 # Download libraries
 include(TivaWare)
 include(OrbitOled)
+include(FreeRTOS)
 
 # Build source files
 file(GLOB SOURCES src/*.c)
 add_executable(${CMAKE_PROJECT_NAME}.axf ${SOURCES})
-target_link_libraries(${CMAKE_PROJECT_NAME}.axf OrbitOled TivaWare)
+target_link_libraries(${CMAKE_PROJECT_NAME}.axf TivaWare OrbitOled FreeRTOS)
