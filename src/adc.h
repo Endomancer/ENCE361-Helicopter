@@ -5,6 +5,11 @@
 #include <stdbool.h>
 #include "circBufT.h"
 #include "driverlib/adc.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+// Calibration task handler
+extern TaskHandle_t xCalibrationHandle;
 
 //*****************************************************************************
 // The handler for the ADC conversion complete interrupt.
@@ -16,8 +21,14 @@ void ADCIntHandler(void);
 void initADC(void);
 
 // Calculate the average value in the circular buffer
-int32_t average();
+uint32_t averageADCVal(void);
 
+// Calculate height as a percentage
+int32_t getHeight(void);
+
+// Sample ADC
 void vADCTask(void *pvParameters);
+
+void vCalibrationTask(void *pvParameters);
 
 #endif
