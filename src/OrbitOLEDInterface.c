@@ -86,6 +86,7 @@ void OLEDInitialise(void)
 	 */
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD); //Need signals on GPIOD
 	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE); //Need signals on GPIOE
+	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF); //Need signals on GPIOF
 
 	OrbitOledInit();
 }
