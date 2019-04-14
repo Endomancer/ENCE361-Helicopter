@@ -18,4 +18,6 @@ void initADC(void);
 // Calculate the average value in the circular buffer
 int32_t average();
 
+void vADCTask(void *pvParameters);
+
 #endif

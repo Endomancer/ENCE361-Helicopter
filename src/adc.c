@@ -2,6 +2,8 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/sysctl.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 //*****************************************************************************
 // Global variables
@@ -48,7 +50,7 @@ void initADC(void)
     // sequence 0 has 8 programmable steps.  Since we are only doing a single
     // conversion using sequence 3 we will only configure step 0.  For more
     // on the ADC sequences and steps, refer to the LM3S1968 datasheet.
-    ADCSequenceStepConfigure(ADC0_BASE, 3, 0, ADC_CTL_CH9 | ADC_CTL_IE | ADC_CTL_END);
+    ADCSequenceStepConfigure(ADC0_BASE, 3, 0, ADC_CTL_CH0 | ADC_CTL_IE | ADC_CTL_END);
 
     // Since sample sequence 3 is now configured, it must be enabled.
     ADCSequenceEnable(ADC0_BASE, 3);
@@ -73,4 +75,16 @@ average()
     }
 
     return (2 * sum + BUF_SIZE) / 2 / BUF_SIZE;
+}
+
+void vADCTask(void *pvParameters)
+{
+    while(1)
+    {
+        TickType_t xLastWakeTime = xTaskGetTickCount();
+        
+        ADCProcessorTrigger(ADC0_BASE, 3);
+
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
+    }
 }

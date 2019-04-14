@@ -6,7 +6,8 @@
 #include "driverlib/adc.h"
 #include "driverlib/systick.h"
 
-static uint32_t g_ulSampCnt; // Counter for the interrupts
+// Required by FreeRTOS
+uint32_t SystemCoreClock;
 
 //********************************************************
 // Initialisation functions: clock, SysTick, display, UART
@@ -16,6 +17,9 @@ void initClock(void)
     // Set the clock rate to 20 MHz
     SysCtlClockSet(SYSCTL_SYSDIV_10 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
                    SYSCTL_XTAL_16MHZ);
+
+	// Configure FreeRTOS clock speed 
+	SystemCoreClock = SysCtlClockGet();
 }
 
 //*******************************************************************
@@ -44,8 +48,8 @@ void SysTickIntHandler(void)
     //
     // Initiate a conversion
     //
-    ADCProcessorTrigger(ADC0_BASE, 3);
-    g_ulSampCnt++;
+    //ADCProcessorTrigger(ADC0_BASE, 3);
+    //g_ulSampCnt++;
 
     // Poll buttons
     updateButtons();

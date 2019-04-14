@@ -7,6 +7,9 @@
 
 #define SAMPLE_RATE_HZ 256
 
+// Required by FreeRTOS
+extern uint32_t SystemCoreClock;
+
 //********************************************************
 // Initialisation functions: clock, SysTick, display, UART
 //********************************************************
