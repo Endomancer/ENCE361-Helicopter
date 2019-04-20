@@ -2,11 +2,24 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/sysctl.h"
+#include "display.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+#define MILLISECONDS 1000
+#define ADC_SAMPLE_RATE_HZ 100
+#define SAMPLE_RATE_MS (MILLISECONDS / ADC_SAMPLE_RATE_HZ)
+#define CALIBRATION_SAMPLES 4
+#define CALIBRATION_SAMPLE_RATE_MS 300
+#define MAX_HEIGHT 993 // Corresponds to ~ 0.8 V
+#define PERCENT 100
 
 //*****************************************************************************
 // Global variables
 //*****************************************************************************
-static circBuf_t g_inBuffer; // Buffer of size BUF_SIZE integers (sample values)
+static circBuf_t circBuf; // Buffer of size BUF_SIZE integers (sample values)
+static uint32_t calibrationReference;
+TaskHandle_t xCalibrationHandle = NULL; // Calibration task handler
 
 //*****************************************************************************
 // The handler for the ADC conversion complete interrupt.
@@ -21,7 +34,7 @@ void ADCIntHandler(void)
     ADCSequenceDataGet(ADC0_BASE, 3, &ulValue);
 
     // Place it in the circular buffer (advancing write index)
-    writeCircBuf(&g_inBuffer, ulValue);
+    writeCircBuf(&circBuf, ulValue);
 
     // Clean up, clearing the interrupt
     ADCIntClear(ADC0_BASE, 3);
@@ -30,7 +43,7 @@ void ADCIntHandler(void)
 void initADC(void)
 {
     // Initialise the circular buffer
-    initCircBuf(&g_inBuffer, BUF_SIZE);
+    initCircBuf(&circBuf, BUF_SIZE);
 
     // The ADC0 peripheral must be enabled for configuration and use.
     SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
@@ -61,16 +74,78 @@ void initADC(void)
 }
 
 // Calculate the average value in the circular buffer
-int32_t
-average()
+uint32_t averageADCVal()
 {
-    int32_t sum = 0;
-    uint16_t i;
+    uint32_t sum = 0;
 
-    for (i = 0; i < BUF_SIZE; i++)
+    // Accumulate samples
+    for (uint8_t i = 0; i < BUF_SIZE; i++)
     {
-        sum += readCircBuf(&g_inBuffer);
+        sum += readCircBuf(&circBuf);
     }
 
+    // Calculate mean and round value
     return (2 * sum + BUF_SIZE) / 2 / BUF_SIZE;
+}
+
+// Calculate height as a percentage
+int32_t getHeight()
+{
+    // Calculate height difference
+    int32_t height = (((int32_t)calibrationReference) - averageADCVal());
+
+    // Convert height to percentage
+    height = height * PERCENT / MAX_HEIGHT;
+
+    // Ensure height remains between 0% and 100%
+    if (height < 0)
+    {
+        height = 0;
+    }
+    else if (height > PERCENT)
+    {
+        height = PERCENT;
+    }
+
+    return height;
+}
+
+void vADCTask(void *pvParameters)
+{
+    while(1)
+    {
+        TickType_t xLastWakeTime = xTaskGetTickCount();
+        
+        ADCProcessorTrigger(ADC0_BASE, 3);
+
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(SAMPLE_RATE_MS));
+    }
+}
+
+void vCalibrationTask(void *pvParameters)
+{
+    while(1)
+    {
+        // Start calibration display task
+        xTaskNotify(xDisplayHandle, CALIBRATE, eSetValueWithOverwrite);
+
+        // Wait for circular buffer to fill up
+        vTaskDelay(pdMS_TO_TICKS(SAMPLE_RATE_MS * BUF_SIZE));
+
+        calibrationReference = 0;
+
+        for (uint8_t i = 0; i < CALIBRATION_SAMPLES; i++)
+        {
+            calibrationReference += averageADCVal();
+            vTaskDelay(pdMS_TO_TICKS(CALIBRATION_SAMPLE_RATE_MS));
+        }
+
+        calibrationReference /= CALIBRATION_SAMPLES;
+
+        // Finish calibration display task
+        xTaskNotify(xDisplayHandle, CALIBRATE, eSetValueWithOverwrite);
+
+        // Block task indefinitely until another calibration is requested
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    }
 }
