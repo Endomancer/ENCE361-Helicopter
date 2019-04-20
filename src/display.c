@@ -1,5 +1,6 @@
 #include "display.h"
 #include "adc.h"
+#include "quad.h"
 #include "utils/ustdlib.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -19,9 +20,10 @@ typedef enum
 // Display task handler
 TaskHandle_t xDisplayHandle = NULL;
 
+// Display a title at the top of the OLED
 void displayTitle()
 {
-    OLEDStringDraw("Milestone 1", 0, 0);
+    OLEDStringDraw("Milestone 2", 0, 0);
 }
 
 // Clear the entire OLED display
@@ -41,29 +43,28 @@ void initDisplay()
     clearDisplay();
 }
 
+// Display a given altitude
 void displayAltitude(int16_t altitude)
 {
-    char string[17]; // 16 characters across the display
-
-    // Form a new string for the line.  The maximum width specified for the
-    // number field ensures it is displayed right justified.
+    char string[17]; // Display is 16 characters wide
     usnprintf(string, sizeof(string), "Altitude = %3d%%", altitude);
-    // Update line on display.
-    OLEDStringDraw(string, 0, 1);
+    OLEDStringDraw(string, 0, 1); // Update line on display
 }
 
-//*****************************************************************************
-// Function to display the mean ADC value (10-bit value, note) and sample count.
-//*****************************************************************************
+// Display a given angle
+void displayAngle(int16_t angle)
+{
+    char string[17]; // Display is 16 characters wide
+    usnprintf(string, sizeof(string), "Angle = %3d%%", angle);
+    OLEDStringDraw(string, 0, 2); // Update line on display
+}
+
+// Display the averaged ADC value
 void displayMeanVal(int16_t meanVal)
 {
-    char string[17]; // 16 characters across the display
-
-    // Form a new string for the line.  The maximum width specified for the
-    // number field ensures it is displayed right justified.
+    char string[17]; // Display is 16 characters wide
     usnprintf(string, sizeof(string), "Mean ADC = %4d", meanVal);
-    // Update line on display.
-    OLEDStringDraw(string, 0, 1);
+    OLEDStringDraw(string, 0, 1); // Update line on display
 }
 
 void displayCalibrating(bool calibrating)
@@ -148,6 +149,7 @@ void vDisplayTask(void *pvParameters)
         case NORMAL:
             displayTitle();
             displayAltitude(getHeight());
+            displayAngle(getQuadAngle());
             break;
 
         case ADC:
