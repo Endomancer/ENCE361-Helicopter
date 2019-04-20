@@ -3,19 +3,24 @@
 
 #include <stdint.h>
 #include "OrbitOLEDInterface.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+typedef enum
+{
+    NONE,
+    NEXT_STATE,
+    CALIBRATE
+} notification_t;
+
+// Display task handler
+extern TaskHandle_t xDisplayHandle;
 
 // Initialise the display
 void initDisplay(void);
 
-// Clear the entire OLED display
-void clearDisplay(void);
-
-//*****************************************************************************
-// Function to display the mean ADC value (10-bit value, note) and sample count.
-//*****************************************************************************
-void displayMeanVal(int16_t meanVal);
-
-void displayAltitude(int16_t altitude);
+// OLED display task
+void vDisplayTask(void *pvParameters);
 
 void displayAngle(int16_t angle);
 
