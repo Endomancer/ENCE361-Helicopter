@@ -22,4 +22,6 @@ void initDisplay(void);
 // OLED display task
 void vDisplayTask(void *pvParameters);
 
+void displayAngle(int16_t angle);
+
 #endif

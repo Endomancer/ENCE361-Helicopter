@@ -14,6 +14,7 @@ int main(void)
     initADC();
     initButtons();
     initDisplay();
+    initQaud();
 
     // Create tasks
     xTaskCreate(vADCTask, "Sample ADC", 64, NULL, 1, NULL);
