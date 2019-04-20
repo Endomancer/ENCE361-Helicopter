@@ -8,7 +8,8 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/pin_map.h"
 
-#define SLOT_COUNT (112) // Number of slots in disk
+#define DEGREES 360
+#define SLOT_COUNT 112 // Number of slots in disk
 #define ROT_COUNT (SLOT_COUNT * 4) // State changes per rotation
 
 static int32_t quadPos;
@@ -41,10 +42,11 @@ void resetQuad()
     quadPos = 0;
 }
 
-// Returns quadPos translated into degrees of rotation
-uint32_t getQuadAngle()
+// Returns the current angle converted into degrees
+int32_t getQuadAngle()
 {
-    return (uint32_t) quadPos * 360 / ROT_COUNT;
+    // Convert angle into degrees and value between -180 and 179 degrees
+    return (quadPos * DEGREES / ROT_COUNT) - (DEGREES / 2);
 }
 
 void QuadIntHandler()
@@ -60,7 +62,7 @@ void QuadIntHandler()
     GPIOIntClear(GPIO_PORTB_BASE, intStatus);
 
     if (intStatus & (GPIO_INT_PIN_0 | GPIO_INT_PIN_1)) {
-        value &= 0b11; // Mask off two rightmost bits (previous value)
+        value &= 3; // Masks off two rightmost bits (previous value)
         value <<= 2; // Shift previous value left
 
         // Read encoder pins and concatenate with previous value to form a 4-bit pattern
