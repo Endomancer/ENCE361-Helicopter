@@ -47,7 +47,7 @@ void initDisplay()
 void displayAltitude(int16_t altitude)
 {
     char string[17]; // Display is 16 characters wide
-    usnprintf(string, sizeof(string), "Altitude = %3d%%", altitude);
+    usnprintf(string, sizeof(string), "Altitude = %4d%%", altitude);
     OLEDStringDraw(string, 0, 1); // Update line on display
 }
 
@@ -55,7 +55,7 @@ void displayAltitude(int16_t altitude)
 void displayAngle(int16_t angle)
 {
     char string[17]; // Display is 16 characters wide
-    usnprintf(string, sizeof(string), "Angle = %3d%%", angle);
+    usnprintf(string, sizeof(string), "Angle    = %4d`", angle);
     OLEDStringDraw(string, 0, 2); // Update line on display
 }
 
