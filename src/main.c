@@ -4,6 +4,7 @@
 #include "buttons4.h"
 #include "clock.h"
 #include "display.h"
+#include "quad.h"
 #include <FreeRTOS.h>
 #include <task.h>
 
