@@ -45,8 +45,8 @@ void resetQuad()
 // Returns the current angle converted into degrees
 int32_t getQuadAngle()
 {
-    // Convert angle into degrees and value between -180 and 179 degrees
-    return (quadPos * DEGREES / ROT_COUNT) - (DEGREES / 2);
+    // Convert angle into degrees (between -180 and 179 degrees)
+    return (quadPos * DEGREES / ROT_COUNT);
 }
 
 void QuadIntHandler()
@@ -71,8 +71,9 @@ void QuadIntHandler()
         // Increment/decrement position according to the lookup table
         quadPos += lookup[value];
 
-        // Ensure position remains in range from 0 to ROT_COUNT, wrapping if limits are exceeded
-        quadPos -= quadPos >= ROT_COUNT ? ROT_COUNT : 0;
-        quadPos += quadPos < 0 ? ROT_COUNT : 0;
+        // Ensure position remains between (-ROT_COUNT / 2) to (ROT_COUNT / 2 - 1)
+        // The position wraps if limits are exceeded
+        quadPos -= quadPos >= (ROT_COUNT / 2) ? ROT_COUNT : 0;
+        quadPos += quadPos < (-ROT_COUNT / 2) ? ROT_COUNT : 0;
     }
 }
