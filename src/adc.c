@@ -3,6 +3,7 @@
 #include "inc/hw_types.h"
 #include "driverlib/sysctl.h"
 #include "display.h"
+#include "quad.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -141,6 +142,8 @@ void vCalibrationTask(void *pvParameters)
         }
 
         calibrationReference /= CALIBRATION_SAMPLES;
+
+        resetQuad();
 
         // Finish calibration display task
         xTaskNotify(xDisplayHandle, CALIBRATE, eSetValueWithOverwrite);
