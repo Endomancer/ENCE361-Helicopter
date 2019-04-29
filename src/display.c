@@ -1,29 +1,14 @@
 #include "display.h"
-#include "adc.h"
-#include "quad.h"
+#include "config.h"
+#include "OrbitOLEDInterface.h"
 #include "utils/ustdlib.h"
-#include "FreeRTOS.h"
-#include "task.h"
 
-#define REFRESH_RATE_MS 50
-#define CALIBRATING_DOT_RATE_MS 250
-#define DISPLAY_WIDTH 14
-
-typedef enum
+void initDisplay()
 {
-    NORMAL,
-    ADC,
-    OFF,
-    CALIBRATING
-} displayState_t;
-
-// Display task handler
-TaskHandle_t xDisplayHandle = NULL;
-
-// Display a title at the top of the OLED
-void displayTitle()
-{
-    OLEDStringDraw("Milestone 2", 0, 0);
+    // Intialise the Orbit OLED display
+    OLEDInitialise();
+    
+    clearDisplay();
 }
 
 // Clear the entire OLED display
@@ -35,12 +20,10 @@ void clearDisplay()
     OLEDStringDraw("                ", 0, 3);
 }
 
-void initDisplay()
+// Display a title at the top of the OLED
+void displayTitle()
 {
-    // Intialise the Orbit OLED display
-    OLEDInitialise();
-    
-    clearDisplay();
+    OLEDStringDraw("Milestone 2", 0, 0);
 }
 
 // Display a given altitude
@@ -55,6 +38,7 @@ void displayAltitude(int16_t altitude)
 void displayAngle(int16_t angle)
 {
     char string[17]; // Display is 16 characters wide
+    // Right align the angle (note that ` displays the ° symbol)
     usnprintf(string, sizeof(string), "Angle    = %4d`", angle);
     OLEDStringDraw(string, 0, 2); // Update line on display
 }
@@ -67,16 +51,16 @@ void displayMeanVal(int16_t meanVal)
     OLEDStringDraw(string, 0, 1); // Update line on display
 }
 
+// Displays loading bar while calibrating
 void displayCalibrating(bool calibrating)
 {
     const char calString[] = "Calibrating";
     const uint8_t dotStartPos = sizeof(calString) - 1;
-    const uint8_t numDots = 3; // Number of dots to display
     static uint8_t dotPos = dotStartPos;
 
     if (calibrating)
     {
-        if (dotPos >= dotStartPos + numDots) {
+        if (dotPos >= dotStartPos + CALIBRATING_NUM_DOTS) {
             // Reset dot position
             dotPos = dotStartPos;
             // Clear dots
@@ -92,81 +76,5 @@ void displayCalibrating(bool calibrating)
     {
         // Reset dot position after calibrating
         dotPos = dotStartPos;
-    }
-    
-    
-}
-
-void vDisplayTask(void *pvParameters)
-{
-    static displayState_t state = NORMAL;
-    static displayState_t prevState = NORMAL;
-    static bool calibrating = false;
-
-    while (1)
-    {
-        notification_t notification = ulTaskNotifyTake(pdTRUE, 0);
-
-        switch (notification)
-        {
-            case CALIBRATE:
-                calibrating = !calibrating;
-                clearDisplay();
-                
-                if (calibrating)
-                {
-                    // Save display state
-                    prevState = state;
-                    state = CALIBRATING;
-                }
-                else
-                {
-                    // Restore display state
-                    state = prevState;
-                    // Reset calibration display function
-                    displayCalibrating(calibrating);
-                }
-                break;
-            
-            case NEXT_STATE:
-                // Do not change display state when calibrating
-                if (!calibrating)
-                {
-                    // Cycle through display states: NORMAL -> ADC -> OFF
-                    state = state < OFF ? state + 1 : NORMAL;
-
-                    // Clear display and redraw title
-                    clearDisplay();
-                }
-                break;
-        
-            default: // No action
-                break;
-        }
-
-        switch (state)
-        {
-        case NORMAL:
-            displayTitle();
-            displayAltitude(getHeight());
-            displayAngle(getQuadAngle());
-            break;
-
-        case ADC:
-            displayTitle();
-            displayMeanVal(averageADCVal());
-            break;
-
-        case CALIBRATING:
-            displayCalibrating(calibrating);
-            // Slow down display refresh rate: only need to display dots 
-            vTaskDelay(pdMS_TO_TICKS(CALIBRATING_DOT_RATE_MS - REFRESH_RATE_MS));
-            break;
-
-        default: // Display off
-            break;
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(REFRESH_RATE_MS));
     }
 }

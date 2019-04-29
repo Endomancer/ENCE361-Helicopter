@@ -17,19 +17,13 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "buttons4.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/debug.h"
 #include "inc/tm4c123gh6pm.h" // Board specific defines (for PF0)
-#include "buttons4.h"
-#include "adc.h"
-#include "display.h"
-#include "FreeRTOS.h"
-#include "task.h"
-
-#define POLL_RATE_MS 10
 
 // *******************************************************
 // Globals to module
@@ -38,28 +32,6 @@ static bool but_state[NUM_BUTS]; // Corresponds to the electrical state
 static uint8_t but_count[NUM_BUTS];
 static bool but_flag[NUM_BUTS];
 static bool but_normal[NUM_BUTS]; // Corresponds to the electrical state
-
-void vButtonsTask(void *pvParameters)
-{
-    while (1)
-    {
-        // Poll buttons
-        updateButtons();
-
-        if (checkButton(LEFT) == PUSHED)
-        {
-            // Start calibrating
-            xTaskNotifyGive(xCalibrationHandle);
-        }
-        else if (checkButton(UP) == PUSHED)
-        {
-            // Change to next display state
-            xTaskNotify(xDisplayHandle, NEXT_STATE, eSetValueWithOverwrite);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(POLL_RATE_MS));
-    }
-}
 
 // *******************************************************
 // initButtons: Initialise the variables associated with the set of buttons
