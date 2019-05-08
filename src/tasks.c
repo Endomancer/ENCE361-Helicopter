@@ -5,6 +5,7 @@
 #include "display.h"
 #include "quad.h"
 #include "config.h"
+#include "uart.h"
 
 #define STACK_SIZE 64
 
@@ -164,6 +165,24 @@ void vDisplayTask(void *pvParameters)
     }
 }
 
+void vUARTTask(void *pvParameters)
+{
+    while (1)
+    {
+        static displayState_t state = NORMAL;
+        // TODO Additional states
+        switch (state)
+        {
+        default: // makes it work.jpeg
+        case NORMAL:
+            UARTAltitude(getHeight());
+            UARTAngle(getQuadAngle());
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(UART_REFRESH_RATE_MS));
+    }
+}
+
 void createTasks()
 {
     // Create tasks
@@ -171,4 +190,6 @@ void createTasks()
     xTaskCreate(vButtonsTask, "Poll Buttons", STACK_SIZE, NULL, 1, NULL);
     xTaskCreate(vCalibrationTask, "Calibrate", STACK_SIZE, NULL, 1, &xCalibrationHandle);
     xTaskCreate(vDisplayTask, "Display", STACK_SIZE, NULL, 1, &xDisplayHandle);
+    // TODO UART handle?
+    xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL,1, NULL);
 }

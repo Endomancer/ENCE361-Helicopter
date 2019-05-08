@@ -7,6 +7,7 @@
 #include "driverlib/uart.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
+#include "utils/ustdlib.h"
 
 #define MAX_STR_LEN 16
 //---USB Serial comms: UART0, Rx:PA0 , Tx:PA1
@@ -55,4 +56,19 @@ void UARTSend(char *pucBuffer)
         UARTCharPut(UART_USB_BASE, *pucBuffer);
         pucBuffer++;
     }
+}
+
+void UARTAltitude(int16_t altitude)
+{
+    char string[18]; // Display is 16 characters wide
+    usnprintf(string, sizeof(string), "Altitude = %4d%%\n", altitude);
+    UARTSend(string);
+}
+
+void UARTAngle(int16_t angle)
+{
+    char string[18]; // Display is 16 characters wide
+    // Right align the angle (note that ` displays the ° symbol)
+    usnprintf(string, sizeof(string), "Angle    = %4d`\n", angle);
+    UARTSend(string);
 }
