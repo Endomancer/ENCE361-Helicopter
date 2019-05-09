@@ -4,6 +4,7 @@
 #include "clock.h"
 #include "display.h"
 #include "quad.h"
+#include "rotors.h"
 #include "tasks.h"
 
 // Initialise peripherals
@@ -14,6 +15,7 @@ void init()
     initButtons();
     initDisplay();
     initQaud();
+    initRotors();
 }
 
 int main(void)

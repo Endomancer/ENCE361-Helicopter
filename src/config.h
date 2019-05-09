@@ -24,4 +24,6 @@
 #define CALIBRATING_DOT_RATE_MS 300
 #define CALIBRATING_NUM_DOTS 5
 
+#define PWM_FREQUENCY 200
+
 #endif
