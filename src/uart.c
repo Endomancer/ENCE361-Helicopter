@@ -8,6 +8,7 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "utils/ustdlib.h"
+#include "config.h"
 
 #define MAX_STR_LEN 16
 //---USB Serial comms: UART0, Rx:PA0 , Tx:PA1
@@ -71,4 +72,26 @@ void UARTAngle(int16_t angle)
     // Right align the angle (note that ` displays the ° symbol)
     usnprintf(string, sizeof(string), "Angle    = %4d`\n", angle);
     UARTSend(string);
+}
+
+void UARTCalibrating(bool calibrating, bool initial)
+{
+    char calString[] = "----------------\nCalibrating ";
+    char endString[] = "\n----------------\n";
+
+    if (calibrating)
+    {
+        if (initial) {
+
+            UARTSend(calString);
+        }
+        UARTSend(".");
+        
+    }
+    else
+    {
+        // Reset dot position after calibrating
+        
+        UARTSend(endString);
+    }
 }

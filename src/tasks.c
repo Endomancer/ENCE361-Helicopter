@@ -26,6 +26,7 @@ typedef enum
 
 TaskHandle_t xCalibrationHandle = NULL; // Calibration task handler
 TaskHandle_t xDisplayHandle = NULL; // Display task handler
+TaskHandle_t xUARTHandle = NULL; //UART task handler
 
 void vADCTask(void *pvParameters)
 {
@@ -67,7 +68,7 @@ void vCalibrationTask(void *pvParameters)
     {
         // Start calibration display task
         xTaskNotify(xDisplayHandle, CALIBRATE, eSetValueWithOverwrite);
-
+        xTaskNotify(xUARTHandle, CALIBRATE, eSetValueWithOverwrite);
         // Wait for circular buffer to fill up
         vTaskDelay(pdMS_TO_TICKS(ADC_SAMPLE_RATE_MS * BUF_SIZE));
 
@@ -85,7 +86,7 @@ void vCalibrationTask(void *pvParameters)
 
         // Finish calibration display task
         xTaskNotify(xDisplayHandle, CALIBRATE, eSetValueWithOverwrite);
-
+        xTaskNotify(xUARTHandle, CALIBRATE, eSetValueWithOverwrite);
         // Block task indefinitely until another calibration is requested
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
     }
@@ -167,17 +168,53 @@ void vDisplayTask(void *pvParameters)
 
 void vUARTTask(void *pvParameters)
 {
+    static displayState_t state = NORMAL;
+    static displayState_t prevState = NORMAL;
+    static bool calibrating = false;
+    bool initial = true;
     while (1)
     {
-        static displayState_t state = NORMAL;
         // TODO Additional states
+        notification_t notification = ulTaskNotifyTake(pdTRUE, 0);
+
+        switch (notification)
+        {
+            case CALIBRATE:
+                calibrating = !calibrating;
+                
+                if (calibrating)
+                {
+                    // Save display state
+                    prevState = state;
+                    state = CALIBRATING;
+                }
+                else
+                {
+                    // Restore display state
+                    state = prevState;
+                    // Reset calibration display function
+                }
+                break;
+        
+            default: // No action
+                break;
+        }
         switch (state)
         {
         default: // makes it work.jpeg
         case NORMAL:
+            if (!initial)
+            {
+                initial = true;
+                UARTCalibrating(false,false);
+            }
             UARTAltitude(getHeight());
             UARTAngle(getQuadAngle());
             break;
+        case CALIBRATING:
+            UARTCalibrating(calibrating, initial);
+            initial = false;
+            vTaskDelay(pdMS_TO_TICKS(CALIBRATING_DOT_RATE_MS - UART_REFRESH_RATE_MS));
         }
         vTaskDelay(pdMS_TO_TICKS(UART_REFRESH_RATE_MS));
     }
@@ -191,5 +228,5 @@ void createTasks()
     xTaskCreate(vCalibrationTask, "Calibrate", STACK_SIZE, NULL, 1, &xCalibrationHandle);
     xTaskCreate(vDisplayTask, "Display", STACK_SIZE, NULL, 1, &xDisplayHandle);
     // TODO UART handle?
-    xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL,1, NULL);
+    xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL,1, &xUARTHandle);
 }

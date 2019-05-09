@@ -2,7 +2,7 @@
 #define UART_H
 
 #include <stdint.h>
-
+#include <stdbool.h>
 //********************************************************
 // initUART - 8 bits, 1 stop bit, no parity
 //********************************************************
@@ -20,5 +20,7 @@ void UARTAngle(int16_t angle);
 void UARTMainPWM();
 
 void UARTTailPWM();
+
+void UARTCalibrating(bool calibrating, bool initial);
 
 #endif
