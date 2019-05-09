@@ -1,6 +1,7 @@
 #ifndef PWMCONFIG_H
 #define PWMCONFIG_H
 
+// Available PWM outputs
 typedef enum pwm_outputs_t
 {
 	M0PWM0_PB6,
