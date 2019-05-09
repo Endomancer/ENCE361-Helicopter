@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "adc.h"
-#include "buttons4.h"
+#include "buttons.h"
 #include "clock.h"
 #include "display.h"
 #include "quad.h"
