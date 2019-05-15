@@ -1,10 +1,10 @@
 // *******************************************************
 //
-// buttons4.c
+// buttons.c
 //
-// Support for a set of FOUR specific buttons on the Tiva/Orbit.
-// ENCE361 sample code.
-// The buttons are:  UP and DOWN (on the Orbit daughterboard) plus
+// Support for a set of FIVE specific buttons on the Tiva/Orbit.
+// ENCE361 sample code, edited for the helicopter project by Thu_am_group1
+// The buttons are:  UP, DOWN and SWITCH (on the Orbit daughterboard) plus
 // LEFT and RIGHT on the Tiva.
 //
 // Note that pin PF0 (the pin for the RIGHT pushbutton - SW2 on
@@ -13,11 +13,14 @@
 // P.J. Bones UCECE
 // Last modified:  7.2.2018
 //
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  9.5.2019
+//
 // *******************************************************
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "buttons4.h"
+#include "buttons.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "driverlib/gpio.h"
@@ -43,21 +46,21 @@ void initButtons(void)
     // UP button (active HIGH)
     SysCtlPeripheralEnable(UP_BUT_PERIPH);
     GPIOPinTypeGPIOInput(UP_BUT_PORT_BASE, UP_BUT_PIN);
-    GPIOPadConfigSet(UP_BUT_PORT_BASE, UP_BUT_PIN, GPIO_STRENGTH_2MA,
-                     GPIO_PIN_TYPE_STD_WPD);
+    GPIOPadConfigSet(UP_BUT_PORT_BASE, UP_BUT_PIN, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
     but_normal[UP] = UP_BUT_NORMAL;
+
     // DOWN button (active HIGH)
     SysCtlPeripheralEnable(DOWN_BUT_PERIPH);
     GPIOPinTypeGPIOInput(DOWN_BUT_PORT_BASE, DOWN_BUT_PIN);
-    GPIOPadConfigSet(DOWN_BUT_PORT_BASE, DOWN_BUT_PIN, GPIO_STRENGTH_2MA,
-                     GPIO_PIN_TYPE_STD_WPD);
+    GPIOPadConfigSet(DOWN_BUT_PORT_BASE, DOWN_BUT_PIN, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
     but_normal[DOWN] = DOWN_BUT_NORMAL;
+
     // LEFT button (active LOW)
     SysCtlPeripheralEnable(LEFT_BUT_PERIPH);
     GPIOPinTypeGPIOInput(LEFT_BUT_PORT_BASE, LEFT_BUT_PIN);
-    GPIOPadConfigSet(LEFT_BUT_PORT_BASE, LEFT_BUT_PIN, GPIO_STRENGTH_2MA,
-                     GPIO_PIN_TYPE_STD_WPU);
+    GPIOPadConfigSet(LEFT_BUT_PORT_BASE, LEFT_BUT_PIN, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
     but_normal[LEFT] = LEFT_BUT_NORMAL;
+
     // RIGHT button (active LOW)
     // Note that PF0 is one of a handful of GPIO pins that need to be
     // "unlocked" before they can be reconfigured.  This also requires
@@ -68,10 +71,16 @@ void initButtons(void)
     GPIO_PORTF_CR_R |= GPIO_PIN_0; //PF0 unlocked
     GPIO_PORTF_LOCK_R = GPIO_LOCK_M;
     GPIOPinTypeGPIOInput(RIGHT_BUT_PORT_BASE, RIGHT_BUT_PIN);
-    GPIOPadConfigSet(RIGHT_BUT_PORT_BASE, RIGHT_BUT_PIN, GPIO_STRENGTH_2MA,
-                     GPIO_PIN_TYPE_STD_WPU);
+    GPIOPadConfigSet(RIGHT_BUT_PORT_BASE, RIGHT_BUT_PIN, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
     but_normal[RIGHT] = RIGHT_BUT_NORMAL;
 
+    // SWITCH (active HIGH)
+    SysCtlPeripheralEnable(SWITCH_PERIPH);
+    GPIOPinTypeGPIOInput(SWITCH_PORT_BASE, SWITCH_PIN);
+    GPIOPadConfigSet(SWITCH_PORT_BASE, SWITCH_PIN, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);    
+    but_normal[SWITCH] = SWITCH_NORMAL;
+
+    // Initialise button states
     for (i = 0; i < NUM_BUTS; i++)
     {
         but_state[i] = but_normal[i];
@@ -99,6 +108,7 @@ void updateButtons(void)
     but_value[DOWN] = (GPIOPinRead(DOWN_BUT_PORT_BASE, DOWN_BUT_PIN) == DOWN_BUT_PIN);
     but_value[LEFT] = (GPIOPinRead(LEFT_BUT_PORT_BASE, LEFT_BUT_PIN) == LEFT_BUT_PIN);
     but_value[RIGHT] = (GPIOPinRead(RIGHT_BUT_PORT_BASE, RIGHT_BUT_PIN) == RIGHT_BUT_PIN);
+    but_value[SWITCH] = (GPIOPinRead(SWITCH_PORT_BASE, SWITCH_PIN) == SWITCH_PIN);
     // Iterate through the buttons, updating button variables as required
     for (i = 0; i < NUM_BUTS; i++)
     {

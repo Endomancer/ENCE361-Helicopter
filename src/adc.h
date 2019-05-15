@@ -17,7 +17,7 @@ void ADCIntHandler(void);
 // Initialise the ADC
 void initADC(void);
 
-// Calculate the average value in the circular buffer
+// Return the average value in the circular buffer
 uint32_t averageADCVal(void);
 
 // Calculate height as a percentage

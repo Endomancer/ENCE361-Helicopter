@@ -52,3 +52,20 @@ uint32_t readCircBuf(circBuf_t *buffer)
 		buffer->rindex = 0;
 	return entry;
 }
+
+// **********************************************************
+// averageCircBuf: returns the average of the contents of the
+// circular buffer's contents
+uint32_t averageCircBuf(circBuf_t *buffer)
+{
+    uint32_t sum = 0;
+
+    // Accumulate samples
+    for (uint8_t i = 0; i < buffer->size; i++)
+    {
+        sum += readCircBuf(buffer);
+    }
+
+    // Calculate mean and round value
+    return (2 * sum + buffer->size) / 2 / buffer->size;
+}
