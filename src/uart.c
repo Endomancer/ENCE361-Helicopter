@@ -9,6 +9,8 @@
 #include "inc/hw_types.h"
 #include "utils/ustdlib.h"
 #include "config.h"
+#include "rotors.h"
+#include "pwm.h"
 
 #define MAX_STR_LEN 16
 //---USB Serial comms: UART0, Rx:PA0 , Tx:PA1
@@ -94,4 +96,20 @@ void UARTCalibrating(bool calibrating, bool initial)
         
         UARTSend(endString);
     }
+}
+
+void UARTMainPWM()
+{
+    char string[20];
+    uint16_t duty = getMainRotorDuty();
+    usnprintf(string, sizeof(string), "Main Duty = %4d%%\n", duty);
+    UARTSend(string);
+}
+
+void UARTTailPWM()
+{
+    char string[20];
+    uint16_t duty = getTailRotorDuty();
+    usnprintf(string, sizeof(string), "Tail Duty = %4d%%\n", duty);
+    UARTSend(string);
 }

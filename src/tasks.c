@@ -142,9 +142,11 @@ void vDisplayTask(void *pvParameters)
         switch (state)
         {
         case NORMAL:
-            displayTitle();
+            // displayTitle();
             displayAltitude(getHeight());
             displayAngle(getQuadAngle());
+            displayMainPWM();
+            displayTailPWM();
             break;
 
         case ADC:
@@ -210,6 +212,8 @@ void vUARTTask(void *pvParameters)
             }
             UARTAltitude(getHeight());
             UARTAngle(getQuadAngle());
+            UARTTailPWM();
+            UARTMainPWM();
             break;
         case CALIBRATING:
             UARTCalibrating(calibrating, initial);
