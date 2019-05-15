@@ -62,19 +62,10 @@ void initADC(void)
     ADCIntEnable(ADC_BASE, ADC_SEQUENCE);
 }
 
-// Calculate the average value in the circular buffer
+// Returns the average value in the circular buffer
 uint32_t averageADCVal()
 {
-    uint32_t sum = 0;
-
-    // Accumulate samples
-    for (uint8_t i = 0; i < BUF_SIZE; i++)
-    {
-        sum += readCircBuf(&circBuf);
-    }
-
-    // Calculate mean and round value
-    return (2 * sum + BUF_SIZE) / 2 / BUF_SIZE;
+    return averageCircBuf(&circBuf);
 }
 
 // Calculate height as a percentage

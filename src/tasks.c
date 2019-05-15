@@ -6,6 +6,7 @@
 #include "quad.h"
 #include "config.h"
 #include "uart.h"
+#include "pwm.h"
 
 #define STACK_SIZE 64
 
