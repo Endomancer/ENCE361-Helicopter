@@ -4,6 +4,7 @@
 #include "clock.h"
 #include "display.h"
 #include "quad.h"
+#include "rotors.h"
 #include "tasks.h"
 #include "uart.h"
 
@@ -15,6 +16,7 @@ void init()
     initButtons();
     initDisplay();
     initQaud();
+    initRotors();
     initUART();
 }
 
