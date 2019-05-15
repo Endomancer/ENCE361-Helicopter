@@ -2,6 +2,7 @@
 #include "config.h"
 #include "OrbitOLEDInterface.h"
 #include "utils/ustdlib.h"
+#include "rotors.h"
 
 void initDisplay()
 {
@@ -31,7 +32,7 @@ void displayAltitude(int16_t altitude)
 {
     char string[17]; // Display is 16 characters wide
     usnprintf(string, sizeof(string), "Altitude = %4d%%", altitude);
-    OLEDStringDraw(string, 0, 1); // Update line on display
+    OLEDStringDraw(string, 0, 0); // Update line on display
 }
 
 // Display a given angle
@@ -40,7 +41,7 @@ void displayAngle(int16_t angle)
     char string[17]; // Display is 16 characters wide
     // Right align the angle (note that ` displays the ° symbol)
     usnprintf(string, sizeof(string), "Angle    = %4d`", angle);
-    OLEDStringDraw(string, 0, 2); // Update line on display
+    OLEDStringDraw(string, 0, 1); // Update line on display
 }
 
 // Display the averaged ADC value
@@ -77,4 +78,20 @@ void displayCalibrating(bool calibrating)
         // Reset dot position after calibrating
         dotPos = dotStartPos;
     }
+}
+
+void displayTailPWM()
+{
+    char string[17]; // Display is 16 characters wide
+    uint16_t duty = getTailRotorDuty();
+    usnprintf(string, sizeof(string), "Tail Duty = %4d", duty);
+    OLEDStringDraw(string, 0, 3); // Update line on display
+}
+
+void displayMainPWM()
+{
+char string[17]; // Display is 16 characters wide
+    uint16_t duty = getMainRotorDuty();
+    usnprintf(string, sizeof(string), "Main Duty = %4d", duty);
+    OLEDStringDraw(string, 0, 2); // Update line on display
 }

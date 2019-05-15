@@ -45,6 +45,12 @@ pwm_t* initPWM(pwm_outputs_t output)
     return pwm;
 }
 
+// Get the duty cycle of a PWM output
+uint16_t getPWMDuty(pwm_t* pwm)
+{
+    return (uint16_t) pwm->width * PERCENT / pwm->period;
+}
+
 // Set the duty cycle of a PWM output
 // Values should range from 0 to 100
 void setPWMDuty(pwm_t* pwm, uint16_t duty)
