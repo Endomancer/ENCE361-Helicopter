@@ -6,6 +6,7 @@
 #include "quad.h"
 #include "rotors.h"
 #include "tasks.h"
+#include "uart.h"
 
 // Initialise peripherals
 void init()
@@ -16,6 +17,7 @@ void init()
     initDisplay();
     initQaud();
     initRotors();
+    initUART();
 }
 
 int main(void)
