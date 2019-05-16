@@ -84,7 +84,7 @@ void displayTailPWM()
 {
     char string[17]; // Display is 16 characters wide
     uint16_t duty = getTailRotorDuty();
-    usnprintf(string, sizeof(string), "Tail Duty = %4d", duty);
+    usnprintf(string, sizeof(string), "Tail PWM = %4d%%", duty);
     OLEDStringDraw(string, 0, 3); // Update line on display
 }
 
@@ -92,6 +92,6 @@ void displayMainPWM()
 {
 char string[17]; // Display is 16 characters wide
     uint16_t duty = getMainRotorDuty();
-    usnprintf(string, sizeof(string), "Main Duty = %4d", duty);
+    usnprintf(string, sizeof(string), "Main PWM = %4d%%", duty);
     OLEDStringDraw(string, 0, 2); // Update line on display
 }
