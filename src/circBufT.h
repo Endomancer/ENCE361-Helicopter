@@ -52,4 +52,9 @@ uint32_t readCircBuf(circBuf_t *buffer);
 // re initialised by another call to initCircBuf().
 void freeCircBuf(circBuf_t *buffer);
 
+// *******************************************************
+// averageCircBuf: returns the average of the contents of the
+// circuar buffer's contents
+uint32_t averageCircBuf(circBuf_t *buffer);
+
 #endif /*CIRCBUFT_H_*/
