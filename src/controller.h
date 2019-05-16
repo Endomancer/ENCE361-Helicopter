@@ -6,14 +6,14 @@
 /* controller struct */
 typedef struct
 {
-	uint16_t Kp;   // Proportional gain
-	uint16_t Ki; // Integral Gain
-	uint16_t Kd; // Differential gain
-    int32_t p_error; // Proportional error
-    int32_t i_error; // Integral error
-    int32_t *d_error; // Differential error
+    uint16_t Kp;        // Proportional gain
+    uint16_t Ki;        // Integral gain
+    uint16_t Kd;        // Differential gain
+    int32_t p_error;    // Proportional error
+    int32_t i_error;    // Integral error
+    int32_t *d_error;   // Differential error
 } controller_t;
 
-
+void controller();
 
 #endif 
