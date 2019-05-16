@@ -3,17 +3,19 @@
 
 #include <stdint.h>
 
-/* controller struct */
+// PID structure
 typedef struct
 {
     uint16_t Kp;        // Proportional gain
     uint16_t Ki;        // Integral gain
-    uint16_t Kd;        // Differential gain
+    uint16_t Kd;        // Derivative gain
     int32_t p_error;    // Proportional error
     int32_t i_error;    // Integral error
-    int32_t *d_error;   // Differential error
-} controller_t;
+    int32_t d_error;    // Derivative error
+} pid_t;
 
-void controller();
+void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
 
-#endif 
+void controller(pid_t* pid);
+
+#endif
