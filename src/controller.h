@@ -18,4 +18,10 @@ void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
 
 void controller(pid_t* pid);
 
-#endif
+// *******************************************************
+// controlUpdate: Updates the control output based on the 
+// current system error and gains 
+int32_t controlUpdate(controller_t *system);
+
+
+#endif 
