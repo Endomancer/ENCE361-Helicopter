@@ -1,11 +1,12 @@
 #include "tasks.h"
 #include "adc.h"
-#include "buttons4.h"
+#include "buttons.h"
 #include "clock.h"
 #include "display.h"
 #include "quad.h"
 #include "config.h"
 #include "uart.h"
+#include "pwm.h"
 
 #define STACK_SIZE 64
 
@@ -47,16 +48,41 @@ void vButtonsTask(void *pvParameters)
         // Poll buttons
         updateButtons();
 
-        if (checkButton(LEFT) == PUSHED)
+        uint8_t switch_state = checkButton(SWITCH);
+        
+        if (switch_state)
         {
-            // Start calibrating
-            xTaskNotifyGive(xCalibrationHandle);
+            if (switch_state == PUSHED)
+            {
+                // TODO set mode to flying/taking off
+        
+            }
+            else if (switch_state == RELEASED)
+            {
+                // TODO set mode to landing
+
+            }
+        }
+        else if (checkButton(LEFT) == PUSHED)
+        {
+            // TODO Rotate 15deg CCW
+            
+        }
+        else if (checkButton(RIGHT) == PUSHED)
+        {
+            // TODO Rotate 15deg CW
+
         }
         else if (checkButton(UP) == PUSHED)
         {
-            // Change to next display state
-            xTaskNotify(xDisplayHandle, NEXT_STATE, eSetValueWithOverwrite);
+            // TODO Increase altitude by 10%
+            
         }
+        else if (checkButton(DOWN) == PUSHED)
+        {
+            // TODO Decrease altitude by 10%
+
+        }    
 
         vTaskDelay(pdMS_TO_TICKS(BUTTON_POLL_RATE_MS));
     }

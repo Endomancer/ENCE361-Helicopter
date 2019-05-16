@@ -2,7 +2,7 @@
 #define BUTTONS_H_
 
 // *******************************************************
-// buttons4.h
+// buttons.h
 //
 // Support for a set of FOUR specific buttons on the Tiva/Orbit.
 // ENCE361 sample code.
@@ -26,14 +26,15 @@ enum butNames
     DOWN,
     LEFT,
     RIGHT,
+    SWITCH,
     NUM_BUTS
 };
 
 enum butStates
 {
-    RELEASED,
+    NO_CHANGE,
     PUSHED,
-    NO_CHANGE
+    RELEASED
 };
 
 // UP button
@@ -59,6 +60,12 @@ enum butStates
 #define RIGHT_BUT_PORT_BASE GPIO_PORTF_BASE
 #define RIGHT_BUT_PIN GPIO_PIN_0
 #define RIGHT_BUT_NORMAL true
+
+// SWITCH switch
+#define SWITCH_PERIPH SYSCTL_PERIPH_GPIOA
+#define SWITCH_PORT_BASE GPIO_PORTA_BASE
+#define SWITCH_PIN GPIO_PIN_7
+#define SWITCH_NORMAL false
 
 #define NUM_BUT_POLLS 3
 
