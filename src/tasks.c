@@ -68,25 +68,25 @@ void vButtonsTask(void *pvParameters)
         else if (checkButton(LEFT) == PUSHED)
         {
             // TODO Rotate 15deg CCW
-            desiredYaw -= 15;
+            desiredYaw -= 448/360*15;
             
         }
         else if (checkButton(RIGHT) == PUSHED)
         {
             // TODO Rotate 15deg CW
-            desiredYaw += 15;
+            desiredYaw += 448/360*15;
 
         }
         else if (checkButton(UP) == PUSHED)
         {
             // TODO Increase altitude by 10%
-            desiredAltitude += 10;
+            if (desiredAltitude < 993) desiredAltitude += 993/10;
             
         }
         else if (checkButton(DOWN) == PUSHED)
         {
             // TODO Decrease altitude by 10%
-            desiredAltitude -= 10;
+            if (desiredAltitude > 0) desiredAltitude -= 993/10;
         }    
 
         vTaskDelay(pdMS_TO_TICKS(BUTTON_POLL_RATE_MS));
