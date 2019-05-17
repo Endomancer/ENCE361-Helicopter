@@ -7,6 +7,7 @@
 #include "config.h"
 #include "uart.h"
 #include "pwm.h"
+#include "controller.h"
 
 #define STACK_SIZE 64
 
@@ -246,6 +247,25 @@ void vUARTTask(void *pvParameters)
     }
 }
 
+void vControllerTask(void *pvParameters)
+{
+    // Should probably initialise these somewhere else
+    pid_t MainPID = initController(10,10,10); // KP,KI,KD -- will probably change to iterate later
+    pid_t TailPID = initController(10,10,10);
+    while(1)
+    {
+        uint32_t xLastWakeTime = xTaskGetTickCount();
+        // TODO a way of getting desired altitude and yaw, ie step input
+        int32_t desiredAltitude = 0;
+        int32_t desiredYaw = 0;
+        // dT might not give a value due to integer math --need to fix
+        uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude);
+        uint16_t TailControl = control_update(&TailPID,getQuadAngle(), xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw);
+        // TODO control to PWM
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONTROLLER_UPDATE_RATE_MS));
+    }
+}
+
 void createTasks()
 {
     // Create tasks
@@ -255,4 +275,5 @@ void createTasks()
     xTaskCreate(vDisplayTask, "Display", STACK_SIZE, NULL, 1, &xDisplayHandle);
     // TODO UART handle?
     xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL,1, &xUARTHandle);
+    xTaskCreate(vControllerTask, "PID Controllers", STACK_SIZE, NULL, 1, NULL);
 }
