@@ -173,9 +173,10 @@ void vDisplayTask(void *pvParameters)
         switch (state)
         {
         case NORMAL:
-            displayTitle();
             displayAltitude(getHeight());
             displayAngle(getQuadAngle());
+            displayMainPWM();
+            displayTailPWM();
             break;
 
         case ADC:
@@ -215,7 +216,7 @@ void vUARTTask(void *pvParameters)
                 
                 if (calibrating)
                 {
-                    // Save display state
+                    // Save UART state
                     prevState = state;
                     state = CALIBRATING;
                 }
@@ -239,8 +240,11 @@ void vUARTTask(void *pvParameters)
                 initial = true;
                 UARTCalibrating(false,false);
             }
+
             UARTAltitude(getHeight());
             UARTAngle(getQuadAngle());
+            UARTTailPWM();
+            UARTMainPWM();
             break;
         case CALIBRATING:
             UARTCalibrating(calibrating, initial);
@@ -277,7 +281,6 @@ void createTasks()
     xTaskCreate(vButtonsTask, "Poll Buttons", STACK_SIZE, NULL, 1, NULL);
     xTaskCreate(vCalibrationTask, "Calibrate", STACK_SIZE, NULL, 1, &xCalibrationHandle);
     xTaskCreate(vDisplayTask, "Display", STACK_SIZE, NULL, 1, &xDisplayHandle);
-    // TODO UART handle?
     xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL,1, &xUARTHandle);
     xTaskCreate(vControllerTask, "PID Controllers", STACK_SIZE, NULL, 1, NULL);
 }

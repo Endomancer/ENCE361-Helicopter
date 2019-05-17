@@ -20,6 +20,18 @@ void initRotors()
     setPWMDuty(rotorTail, 0);
 }
 
+// Get main rotor duty cycle
+uint16_t getMainRotorDuty()
+{
+    return getPWMDuty(rotorMain);
+}
+
+// Get tail rotor duty cycle
+uint16_t getTailRotorDuty()
+{
+    return getPWMDuty(rotorTail);
+}
+
 // Set main rotor speed (between 0 and ROTOR_DUTY_LIMIT)
 void setMainRotorSpeed(uint16_t duty)
 {
