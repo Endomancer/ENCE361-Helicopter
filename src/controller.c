@@ -6,10 +6,10 @@
 #define SCALING_FACTOR 100 // TODO
 #define MAX_PWM 80
 
+// Initialise a PID controller instance
 pid_t initController(uint16_t Kp, uint16_t Ki, uint16_t Kd)
 {
     pid_t pid;
-    // TODO fix: 'pid' is used uninitialized in this function warning
     pid.Kp = Kp;
     pid.Ki = Ki;
     pid.Kd = Kd;
@@ -19,6 +19,16 @@ pid_t initController(uint16_t Kp, uint16_t Ki, uint16_t Kd)
     return pid;
 }
 
+// Update the gains of a specified PID controller, to be used for
+// gain scheduling and finding gains
+void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
+{
+    pid->Kp = Kp;
+    pid->Ki = Ki;
+    pid->Kd = Kd;
+}
+
+// Update the controller output
 uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired)
 {
     pid->p_error = desired - pos;

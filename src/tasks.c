@@ -8,9 +8,10 @@
 #include "uart.h"
 #include "pwm.h"
 #include "controller.h"
+#include "rotors.h"
 
 #define STACK_SIZE 64
-
+int32_t desiredAltitude,desiredYaw = 0;
 typedef enum
 {
     NORMAL,
@@ -67,22 +68,25 @@ void vButtonsTask(void *pvParameters)
         else if (checkButton(LEFT) == PUSHED)
         {
             // TODO Rotate 15deg CCW
+            desiredYaw -= 15;
             
         }
         else if (checkButton(RIGHT) == PUSHED)
         {
             // TODO Rotate 15deg CW
+            desiredYaw += 15;
 
         }
         else if (checkButton(UP) == PUSHED)
         {
             // TODO Increase altitude by 10%
+            desiredAltitude += 10;
             
         }
         else if (checkButton(DOWN) == PUSHED)
         {
             // TODO Decrease altitude by 10%
-
+            desiredAltitude -= 10;
         }    
 
         vTaskDelay(pdMS_TO_TICKS(BUTTON_POLL_RATE_MS));
@@ -256,12 +260,12 @@ void vControllerTask(void *pvParameters)
     {
         uint32_t xLastWakeTime = xTaskGetTickCount();
         // TODO a way of getting desired altitude and yaw, ie step input
-        int32_t desiredAltitude = 0;
-        int32_t desiredYaw = 0;
-        // dT might not give a value due to integer math --need to fix
+                // dT might not give a value due to integer math --need to fix
         uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude);
         uint16_t TailControl = control_update(&TailPID,getQuadAngle(), xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw);
         // TODO control to PWM
+        setMainRotorSpeed(MainControl);
+        setTailRotorSpeed(TailControl);
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONTROLLER_UPDATE_RATE_MS));
     }
 }
