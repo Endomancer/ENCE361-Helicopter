@@ -31,4 +31,5 @@ void sweepBooty()
     while (GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
     resetQuad();
     setTailRotorSpeed(0);
+    setMainRotorSpeed(0);
 }
