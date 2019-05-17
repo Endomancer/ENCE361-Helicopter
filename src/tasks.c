@@ -264,6 +264,8 @@ void vControllerTask(void *pvParameters)
         uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude);
         uint16_t TailControl = control_update(&TailPID,getQuadAngle(), xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw);
         // TODO control to PWM
+        enableMainRotor();
+        enableTailRotor();
         setMainRotorSpeed(MainControl);
         setTailRotorSpeed(TailControl);
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONTROLLER_UPDATE_RATE_MS));
