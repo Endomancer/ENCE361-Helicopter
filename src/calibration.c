@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "rotors.h"
+#include "quad.h"
 
 #include "inc/hw_types.h"
 #include "inc/hw_gpio.h"
@@ -26,5 +27,6 @@ void sweepBooty()
     // wait for the reference signal to turn high
     
     while (GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
+    resetQuad();
     setTailRotorSpeed(0);
 }
