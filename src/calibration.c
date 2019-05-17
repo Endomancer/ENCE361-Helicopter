@@ -23,7 +23,7 @@ void sweepBooty()
 {
     // turn on tail rotor at 40% duty
     enableTailRotor();
-    setTailRotorSpeed(30);
+    setTailRotorSpeed(20);
     // wait for the reference signal to turn high
     
     while (GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
