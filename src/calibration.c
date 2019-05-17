@@ -23,6 +23,8 @@ void sweepBooty()
 {
     // turn on tail rotor at 40% duty
     enableTailRotor();
+    enableMainRotor();
+    setMainRotorSpeed(10);
     setTailRotorSpeed(10);
     // wait for the reference signal to turn high
     
