@@ -75,12 +75,12 @@ void changeMode(control_states_t newState)
     
     case FLYING:
         changeYawMode(FLYING);
-        updateGains(&pidMain, 50, 0, 0);
+        updateGains(&pidMain, 20, 0, 10);
         break;
     
     case LANDING:
         changeYawMode(LANDING);
-        updateGains(&pidMain, 30, 0, 0);
+        updateGains(&pidMain, 20, 0, 0);
         break;
     }
 }
