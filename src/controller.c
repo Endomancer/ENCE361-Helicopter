@@ -47,7 +47,7 @@ uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired, i
     {
         control = MAX_PWM;
     }
-    else if (control < 2
+    else if (control < 2)
     {
         control = 2;
     }

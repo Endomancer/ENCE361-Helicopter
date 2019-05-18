@@ -268,7 +268,7 @@ void vControllerTask(void *pvParameters)
         uint32_t xLastWakeTime = xTaskGetTickCount();
         // TODO a way of getting desired altitude and yaw, ie step input
                 // dT might not give a value due to integer math --need to fix
-        uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude/ALTITUDE_OFFSET);
+        uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude, ALTITUDE_OFFSET);
         uint16_t TailControl = control_update(&TailPID,getQuadAngle(), xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw, getMainRotorDuty()/YAW_SCALE);
         // TODO control to PWM
         enableMainRotor();
