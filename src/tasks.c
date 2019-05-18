@@ -14,6 +14,7 @@
 #define YAW_SCALE 1
 #define ALTITUDE_OFFSET 35
 
+
 int32_t desiredAltitude,desiredYaw = 0;
 typedef enum
 {
@@ -261,7 +262,7 @@ void vUARTTask(void *pvParameters)
 void vControllerTask(void *pvParameters)
 {
     // Should probably initialise these somewhere else
-    pid_t MainPID = initController(10,10,10); // KP,KI,KD -- will probably change to iterate later
+    pid_t MainPID = initController(10,0,0); // KP,KI,KD -- will probably change to iterate later
     pid_t TailPID = initController(10,0,0);
     while(1)
     {
@@ -269,7 +270,7 @@ void vControllerTask(void *pvParameters)
         // TODO a way of getting desired altitude and yaw, ie step input
                 // dT might not give a value due to integer math --need to fix
         uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude, ALTITUDE_OFFSET);
-        uint16_t TailControl = control_update(&TailPID,getQuadAngle(), xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw, getMainRotorDuty()/YAW_SCALE);
+        uint16_t TailControl = control_update(&TailPID,getQuadAngle(), xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw, getMainRotorDuty());
         // TODO control to PWM
         enableMainRotor();
         enableTailRotor();
