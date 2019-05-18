@@ -16,6 +16,10 @@
 #define ADC_RANGE 4095
 #define MAX_HEIGHT (ADC_RANGE * 8 / 33) // Corresponds to 0.8 V
 
+#define DEGREES 360
+#define SLOT_COUNT 112 // Number of slots in disk
+#define ROT_COUNT (SLOT_COUNT * 4) // State changes per rotation
+
 #define UART_REFRESH_RATE_MS 100
 
 #define BUTTON_POLL_RATE_MS 10
@@ -32,4 +36,8 @@
 
 #define CONTROLLER_UPDATE_RATE_MS 100
 #define CPU_CLOCK_SPEED 20000000
+
+#define ALTITUDE_INCREMENT 10
+#define YAW_INCREMENT 15
+#define MIN_FLYING_DUTY 2
 #endif
