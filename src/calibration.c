@@ -25,7 +25,7 @@ void sweepBooty()
     enableTailRotor();
     enableMainRotor();
     setMainRotorSpeed(15);
-    setTailRotorSpeed(27);
+    setTailRotorSpeed(23);
     // wait for the reference signal to turn high
     
     while (GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
