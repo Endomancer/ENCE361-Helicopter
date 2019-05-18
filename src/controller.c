@@ -16,6 +16,7 @@ void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
     pid->p_error = 0;
     pid->i_error = 0;
     pid->d_error = 0;
+    pid->reference = 0;
 }
 
 // Update the gains of a specified PID controller
