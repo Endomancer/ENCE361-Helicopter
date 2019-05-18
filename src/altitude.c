@@ -10,6 +10,7 @@ static control_states_t state = LANDED;
 static int16_t reference;
 static uint32_t prevTime;
 
+// Initialise altitude controller
 void initAltitude()
 {
     initController(&pidMain, 0, 0, 0);
@@ -18,17 +19,20 @@ void initAltitude()
     prevTime = 0;
 }
 
+// Update altitude controller
 void updateAltitude(uint32_t time)
 {
     uint16_t control = 0;
-
+    // Calculate error
     int32_t error = pidMain.reference - getAltitude();
+    // Calculate change in time
     uint32_t deltaTime = time - prevTime;
     prevTime = time;
 
+    // Controller state machine
     switch (state)
     {
-    case SWEEPING:
+    case SWEEPING: // TODO
     case LANDED:
         control = 0;
         break;
@@ -41,24 +45,22 @@ void updateAltitude(uint32_t time)
     
     case LANDING:
         pidMain.reference -= 1; // TODO : Find appropriate landing speed
-
         if (pidMain.reference <= 0)
         {
             changeMode(LANDED);
             changeYawMode(LANDED);
             control = 0;
         }
-        else
-        {
+        else // Continue running altitude controller until landed
             control = controlUpdate(&pidMain, error, deltaTime);
-        }
-        
         break;
     }
 
+    // Update PWM output
     setMainRotorSpeed(control);
 }
 
+// Change controller mode
 void changeMode(control_states_t newState)
 {
     state = newState;
@@ -83,6 +85,8 @@ void changeMode(control_states_t newState)
     }
 }
 
+// Increase altitude by 10%
+// Only used while flying
 void increaseAltitude()
 {
     if (state == FLYING)
@@ -95,6 +99,8 @@ void increaseAltitude()
     }
 }
 
+// Decrease altitude by 10%
+// Only used while flying
 void decreaseAltitude()
 {
     if (state == FLYING)

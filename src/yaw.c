@@ -9,6 +9,7 @@ static control_states_t state = LANDED;
 static int16_t reference;
 static uint32_t prevTime;
 
+// Initialse yaw controller
 void initYaw()
 {
     initController(&pidYaw, 0, 0, 0);
@@ -17,12 +18,15 @@ void initYaw()
     prevTime = 0;
 }
 
+// Update yaw controller
 void updateYaw(uint32_t time)
 {
     uint16_t control = 0;
+    // Calculate change in time
     uint32_t deltaTime = time - prevTime;
     prevTime = time;
 
+    // Controller state machine
     switch (state)
     {
     case LANDED:
@@ -41,9 +45,11 @@ void updateYaw(uint32_t time)
         break;
     }
 
+    // Update PWM output
     setTailRotorSpeed(control);
 }
 
+// Change yaw controller mode
 void changeYawMode(control_states_t newState)
 {
     state = newState;
@@ -66,6 +72,8 @@ void changeYawMode(control_states_t newState)
     }
 }
 
+// Increase yaw by 15 degrees (clockwise)
+// Only used while flying
 void increaseYaw()
 {
     if (state == FLYING)
@@ -78,6 +86,8 @@ void increaseYaw()
     }
 }
 
+// Decrease yaw by 15 degrees (counterclockwise)
+// Only used while flying
 void decreaseYaw()
 {
     if (state == FLYING)
