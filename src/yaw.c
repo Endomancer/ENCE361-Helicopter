@@ -6,7 +6,7 @@
 
 static pid_t pidYaw;
 static control_states_t state = LANDED;
-static int16_t reference;
+static int32_t reference;
 static uint32_t prevTime;
 
 // Initialse yaw controller

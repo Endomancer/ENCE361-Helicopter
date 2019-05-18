@@ -7,7 +7,7 @@
 
 static pid_t pidMain;
 static control_states_t state = LANDED;
-static int16_t reference;
+static int32_t reference;
 static uint32_t prevTime;
 
 // Initialise altitude controller
