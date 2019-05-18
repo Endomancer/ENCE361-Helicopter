@@ -7,13 +7,14 @@
 
 static pid_t pidMain;
 static control_states_t state = LANDED;
+static int16_t reference = 0;
 static uint32_t prevTime = 0;
 
 void initAltitude()
 {
     initController(&pidMain, 0, 0, 0);
-
-    state = LANDED;
+    changeMode(LANDED);
+    reference = 0;
     prevTime = 0;
 }
 
@@ -81,9 +82,11 @@ void increaseAltitude()
 {
     if (state == FLYING)
     {
-        pidMain.reference += MAX_HEIGHT / ALTITUDE_INCREMENT;
-        if (pidMain.reference > MAX_HEIGHT)
-            pidMain.reference = MAX_HEIGHT;
+        reference += ALTITUDE_INCREMENT;
+        if (reference > PERCENT)
+            reference = PERCENT;
+
+        pidMain.reference = MAX_HEIGHT * reference / PERCENT;
     }
 }
 
@@ -91,8 +94,10 @@ void decreaseAltitude()
 {
     if (state == FLYING)
     {
-        pidMain.reference -= MAX_HEIGHT / ALTITUDE_INCREMENT;
-        if (pidMain.reference < 0)
-            pidMain.reference = 0;
+        reference -= ALTITUDE_INCREMENT;
+        if (reference < 0)
+            reference = 0;
+
+        pidMain.reference = MAX_HEIGHT * reference / PERCENT;
     }
 }

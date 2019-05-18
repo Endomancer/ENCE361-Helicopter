@@ -3,16 +3,18 @@
 #include "config.h"
 #include "rotors.h"
 #include "quad.h"
+#include "uart.h"
 
 static pid_t pidYaw;
 static control_states_t state = LANDED;
+static int16_t reference = 0;
 static uint32_t prevTime = 0;
 
 void initYaw()
 {
     initController(&pidYaw, 0, 0, 0);
-
-    state = LANDED;
+    changeYawMode(LANDED);
+    reference = 0;
     prevTime = 0;
 }
 
@@ -35,6 +37,7 @@ void updateYaw(uint32_t time)
         control = controlUpdate(&pidYaw, getQuadAngle(), time - prevTime);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
+        UARTAngle(reference);
         break;
     
     case LANDING:
@@ -84,10 +87,11 @@ void increaseYaw()
 {
     if (state == FLYING)
     {
-        pidYaw.reference += YAW_INCREMENT * ROT_COUNT / DEGREES;
-
-        // Ensure that the reference angle is in an acceptable range
-        pidYaw.reference -= pidYaw.reference >= (ROT_COUNT / 2) ? ROT_COUNT : 0;
+        reference += YAW_INCREMENT;
+        if (reference > DEGREES / 2)
+            reference -= DEGREES;
+        
+        pidYaw.reference = ROT_COUNT * reference / DEGREES;
     }
 }
 
@@ -95,9 +99,10 @@ void decreaseYaw()
 {
     if (state == FLYING)
     {
-        pidYaw.reference -= YAW_INCREMENT * ROT_COUNT / DEGREES;
+        reference -= YAW_INCREMENT;
+        if (reference < -DEGREES / 2)
+            reference += DEGREES;
         
-        // Ensure that the reference angle is in an acceptable range
-        pidYaw.reference += pidYaw.reference < (-ROT_COUNT / 2) ? ROT_COUNT : 0;
+        pidYaw.reference = ROT_COUNT * reference / DEGREES;
     }
 }
