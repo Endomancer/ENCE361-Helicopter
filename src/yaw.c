@@ -39,7 +39,7 @@ void updateYaw(uint32_t time)
     
     case LANDING: // Keep yaw controller running while landing
     case FLYING:
-        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime);
+        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
         break;

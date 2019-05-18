@@ -40,4 +40,8 @@
 #define ALTITUDE_INCREMENT 10
 #define YAW_INCREMENT 15
 #define MIN_FLYING_DUTY 2
+
+#define MAIN_OFFSET 35
+#define YAW_OFFSET_MULTIPLIER 1.1
+
 #endif

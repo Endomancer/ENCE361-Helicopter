@@ -29,7 +29,7 @@ void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
 }
 
 // Update the controller output based on the current system error and gains 
-uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT)
+uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT, int32_t offset)
 {
     pid->p_error = error;
     pid->i_error += pid->p_error * dT / CPU_CLOCK_SPEED;
@@ -40,7 +40,8 @@ uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT)
 
     int32_t control = pid->Kp * pid->p_error
                     + pid->Ki * pid->i_error
-                    + pid->Kd * pid->d_error;
+                    + pid->Kd * pid->d_error
+                    + SCALING_FACTOR * offset;
     
     control /= SCALING_FACTOR;
 

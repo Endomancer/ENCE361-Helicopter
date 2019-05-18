@@ -38,7 +38,7 @@ void updateAltitude(uint32_t time)
         break;
     
     case FLYING:
-        control = controlUpdate(&pidMain, error, deltaTime);
+        control = controlUpdate(&pidMain, error, deltaTime, MAIN_OFFSET);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
         break;
@@ -52,7 +52,7 @@ void updateAltitude(uint32_t time)
             control = 0;
         }
         else // Continue running altitude controller until landed
-            control = controlUpdate(&pidMain, error, deltaTime);
+            control = controlUpdate(&pidMain, error, deltaTime, MAIN_OFFSET);
         break;
     }
 
