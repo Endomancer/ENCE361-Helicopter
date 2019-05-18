@@ -6,7 +6,7 @@
 
 void initYaw();
 
-void updateYaw(uint32_t deltaTime);
+void updateYaw(uint32_t time);
 
 void changeYawMode(control_states_t newState);
 
