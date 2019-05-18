@@ -3,12 +3,11 @@
 #include "config.h"
 #include "rotors.h"
 #include "quad.h"
-#include "uart.h"
 
 static pid_t pidYaw;
 static control_states_t state = LANDED;
-static int16_t reference = 0;
-static uint32_t prevTime = 0;
+static int16_t reference;
+static uint32_t prevTime;
 
 void initYaw()
 {
@@ -37,7 +36,6 @@ void updateYaw(uint32_t time)
         control = controlUpdate(&pidYaw, getQuadAngle(), time - prevTime);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
-        UARTAngle(reference);
         break;
     
     case LANDING:

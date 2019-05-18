@@ -7,8 +7,8 @@
 
 static pid_t pidMain;
 static control_states_t state = LANDED;
-static int16_t reference = 0;
-static uint32_t prevTime = 0;
+static int16_t reference;
+static uint32_t prevTime;
 
 void initAltitude()
 {
