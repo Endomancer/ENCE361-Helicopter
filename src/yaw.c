@@ -67,7 +67,7 @@ void changeYawMode(control_states_t newState)
         break;
     
     case LANDING:
-        updateGains(&pidYaw, 5, 0, 0);
+        updateGains(&pidYaw, 100, 0, 0);
         break;
     }
 }
