@@ -92,7 +92,7 @@ void decreaseAltitude()
     if (state == FLYING)
     {
         pidMain.reference -= MAX_HEIGHT / ALTITUDE_INCREMENT;
-        if (pidMain.reference > 0)
+        if (pidMain.reference < 0)
             pidMain.reference = 0;
     }
 }
