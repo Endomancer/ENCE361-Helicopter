@@ -11,8 +11,6 @@
 #include "rotors.h"
 
 #define STACK_SIZE 64
-#define YAW_SCALE 1
-#define ALTITUDE_OFFSET 35
 
 
 int32_t desiredAltitude,desiredYaw = 0;
@@ -270,7 +268,7 @@ void vControllerTask(void *pvParameters)
         // TODO a way of getting desired altitude and yaw, ie step input
                 // dT might not give a value due to integer math --need to fix
         uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude, ALTITUDE_OFFSET);
-        uint16_t TailControl = control_update(&TailPID,getQuadAngle()*20, xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw*20, getMainRotorDuty());
+        uint16_t TailControl = control_update(&TailPID,getQuadAngle()*20, xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw*20, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
         // TODO control to PWM
         enableMainRotor();
         enableTailRotor();
