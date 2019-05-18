@@ -2,8 +2,6 @@
 #include "pwm.h"
 #include "config.h"
 
-#define ROTOR_DUTY_LIMIT 90
-
 static pwm_t* rotorMain;
 static pwm_t* rotorTail;
 
