@@ -31,26 +31,13 @@ void updateYaw(uint32_t time)
         // TODO: Sweeping booty
         break;
     
+    case LANDING:
     case FLYING:
         // TODO: Use getQuadDiff once branches have been merged
-        control = controlUpdate(&pidYaw, getQuadAngle(), time - prevTime);
+        control = controlUpdate(&pidYaw, getQuad(), time - prevTime);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
         break;
-    
-    case LANDING:
-        pidYaw.reference -= 1; // TODO : Find appropriate landing speed
-
-        if (pidYaw.reference <= 0)
-        {
-            changeYawMode(LANDED);
-            control = 0;
-        }
-        else
-        {
-            // TODO: Use getQuadDiff once branches have been merged
-            control = controlUpdate(&pidYaw, getQuadAngle(), time - prevTime);
-        }
         
         break;
     }

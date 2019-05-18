@@ -41,6 +41,7 @@ void updateAltitude(uint32_t time)
         if (pidMain.reference <= 0)
         {
             changeMode(LANDED);
+            changeYawMode(LANDED);
             control = 0;
         }
         else
@@ -73,7 +74,7 @@ void changeMode(control_states_t newState)
         break;
     
     case LANDING:
-        updateGains(&pidMain, 5, 0, 0);
+        updateGains(&pidMain, 20, 0, 0);
         break;
     }
 }
