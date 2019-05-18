@@ -35,8 +35,8 @@ uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT)
     pid->i_error += pid->p_error * dT / CPU_CLOCK_SPEED;
     pid->d_error = (pid->p_error - pid->d_error) * CPU_CLOCK_SPEED / dT;
 
-    if (pid->i_error > 5000)
-        pid->i_error = 5000;
+    if (pid->i_error > 500)
+        pid->i_error = 500;
 
     int32_t control = pid->Kp * pid->p_error
                     + pid->Ki * pid->i_error
