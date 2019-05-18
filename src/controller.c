@@ -1,26 +1,25 @@
 //* PID controller for heli project
 
 #include "controller.h"
+#include "config.h"
 
 #define BUF_SIZE 3
 #define SCALING_FACTOR 100 // TODO
 #define MAX_PWM 80
 
 // Initialise a PID controller instance
-pid_t initController(uint16_t Kp, uint16_t Ki, uint16_t Kd)
+void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
 {
-    pid_t pid;
-    pid.Kp = Kp;
-    pid.Ki = Ki;
-    pid.Kd = Kd;
-    pid.p_error = 0;
-    pid.i_error = 0;
-    pid.d_error = 0;
-    return pid;
+    pid->Kp = Kp;
+    pid->Ki = Ki;
+    pid->Kd = Kd;
+    pid->p_error = 0;
+    pid->i_error = 0;
+    pid->d_error = 0;
 }
 
-// Update the gains of a specified PID controller, to be used for
-// gain scheduling and finding gains
+// Update the gains of a specified PID controller
+// Used for gain scheduling and experimentally finding gains
 void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
 {
     pid->Kp = Kp;
@@ -28,13 +27,12 @@ void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
     pid->Kd = Kd;
 }
 
-// Update the controller output
-uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired)
+// Update the controller output based on the current system error and gains 
+uint16_t controlUpdate(pid_t* pid, int32_t pos, uint32_t dT)
 {
-    pid->p_error = desired - pos;
-    // I error and D error might not work due to integer math
-    pid->i_error += pid->p_error*dT/1000;
-    pid->d_error = (pid->p_error - pid->d_error)/(dT/1000);
+    pid->p_error = pid->reference - pos;
+    pid->i_error += pid->p_error * dT / CPU_CLOCK_SPEED;
+    pid->d_error = (pid->p_error - pid->d_error) * CPU_CLOCK_SPEED / dT;
 
     int32_t control = pid->Kp * pid->p_error
                     + pid->Ki * pid->i_error
@@ -51,5 +49,5 @@ uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired)
         control = 0;
     }
     
-    return (uint32_t) control;
+    return control;
 }
