@@ -22,6 +22,10 @@ void updateAltitude(uint32_t time)
 {
     uint16_t control = 0;
 
+    int32_t error = pidMain.reference - getAltitude();
+    uint32_t deltaTime = time - prevTime;
+    prevTime = time;
+
     switch (state)
     {
     case SWEEPING:
@@ -30,7 +34,7 @@ void updateAltitude(uint32_t time)
         break;
     
     case FLYING:
-        control = controlUpdate(&pidMain, getAltitude(), time - prevTime);
+        control = controlUpdate(&pidMain, error, deltaTime);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
         break;
@@ -46,14 +50,13 @@ void updateAltitude(uint32_t time)
         }
         else
         {
-            control = controlUpdate(&pidMain, getAltitude(), time - prevTime);
+            control = controlUpdate(&pidMain, error, deltaTime);
         }
         
         break;
     }
 
     setMainRotorSpeed(control);
-    prevTime = time;
 }
 
 void changeMode(control_states_t newState)
@@ -74,6 +77,7 @@ void changeMode(control_states_t newState)
         break;
     
     case LANDING:
+        changeYawMode(LANDING);
         updateGains(&pidMain, 20, 0, 0);
         break;
     }

@@ -20,6 +20,8 @@ void initYaw()
 void updateYaw(uint32_t time)
 {
     uint16_t control = 0;
+    uint32_t deltaTime = time - prevTime;
+    prevTime = time;
 
     switch (state)
     {
@@ -31,19 +33,15 @@ void updateYaw(uint32_t time)
         // TODO: Sweeping booty
         break;
     
-    case LANDING:
+    case LANDING: // Keep yaw controller running while landing
     case FLYING:
-        // TODO: Use getQuadDiff once branches have been merged
-        control = controlUpdate(&pidYaw, getQuad(), time - prevTime);
+        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
-        break;
-        
         break;
     }
 
     setTailRotorSpeed(control);
-    prevTime = time;
 }
 
 void changeYawMode(control_states_t newState)
