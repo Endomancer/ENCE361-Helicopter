@@ -13,7 +13,7 @@
 
 #define ADC_SAMPLE_RATE_HZ 100
 #define ADC_SAMPLE_RATE_MS (MILLISECONDS / ADC_SAMPLE_RATE_HZ)
-#define ADC_RANGE 4095
+#define ADC_RANGE 4096
 #define MAX_HEIGHT (ADC_RANGE * 8 / 33) // Corresponds to 0.8 V
 
 #define DEGREES 360
