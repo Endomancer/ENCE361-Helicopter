@@ -5,6 +5,8 @@
  * obtain an angle measurement.
  * Further details can be found at:
  * https://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino/
+ * Clockwise corresponds to a positive rotation
+ * Counter-Clockwise corresponds to a negative rotation
  **/
 
 #ifndef QUAD_H
@@ -14,18 +16,27 @@
 
 // Initialise the quadrotor GPIO and interrupt handler
 // Interrupts occur when either PB0 or PB1 change state
-void initQaud(void);
+void initQaud();
 
 // Reset the quadrotor slit position to zero
-void resetQuad(void);
+void resetQuad();
 
 // Returns the current angle in degrees
 // Values fall between -180 and 179 degrees
-int32_t getQuadAngle(void);
+int16_t getQuadAngle();
+
+// Return the full/unscaled quadrature position
+// Values fall within -224 and 223
+int16_t getQuad();
+
+// Returns and difference between a reference angle and the current position
+// A current pos clockwise from the reference returns a positve value
+// A current pos counter-clockwise from the reference returns a negative value
+int16_t getQuadDiff(int16_t reference);
 
 // Update the position counter when an interrupt occurs
 // Rotating clockwise increments the position
 // Rotating counterclockwise decrements the position
-void QuadIntHandler(void);
+void QuadIntHandler();
 
 #endif

@@ -8,7 +8,7 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/pin_map.h"
 
-static int32_t quadPos;
+static int16_t quadPos;
 
 // Initialise the port/pins for GPIO with the quadrotor int handler
 void initQaud()
@@ -39,16 +39,36 @@ void resetQuad()
 }
 
 // Returns the current angle converted into degrees
-int32_t getQuadAngle()
+int16_t getQuadAngle()
 {
     // Convert angle into degrees (between -180 and 179 degrees)
     return (quadPos * DEGREES / ROT_COUNT);
 }
 
+// Return the full/unscaled quadrature position
+int16_t getQuad()
+{
+    return quadPos;
+}
+
+// Returns and difference between a reference angle and the current position
+int16_t getQuadDiff(int16_t reference)
+{
+    // Calculate difference between
+    int16_t diff = reference - quadPos;
+
+    // Make sure that diff is in the acceptable range (-ROT_COUNT / 2) to (ROT_COUNT / 2 - 1)
+    // Wraps it if it is not (if the limits are exceeded)
+    diff -= diff >= (ROT_COUNT / 2) ? ROT_COUNT : 0;
+    diff += diff < (-ROT_COUNT / 2) ? ROT_COUNT : 0;
+    
+    return diff;
+}
+
 void QuadIntHandler()
 {
-    static uint32_t value = 0;
-    uint32_t intStatus = 0;
+    static uint16_t value = 0;
+    uint16_t intStatus = 0;
 
     // Lookup table of directions (CW (+ve) or CCW (-ve)) according to the change in reference points over sample steps
     static int8_t lookup[] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
