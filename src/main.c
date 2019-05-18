@@ -28,8 +28,8 @@ int main(void)
 {
     init();
 
-    // createTasks();
+    createTasks();
 
-    // // Start scheduler
-    // vTaskStartScheduler();
+    // Start scheduler
+    vTaskStartScheduler();
 }
