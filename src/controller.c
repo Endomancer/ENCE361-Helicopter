@@ -4,7 +4,7 @@
 
 #define BUF_SIZE 3
 #define SCALING_FACTOR 100 // TODO
-#define MAX_PWM 80
+#define MAX_PWM 98
 
 // Initialise a PID controller instance
 pid_t initController(uint16_t Kp, uint16_t Ki, uint16_t Kd)
@@ -29,7 +29,7 @@ void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
 }
 
 // Update the controller output
-uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired)
+uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired, int32_t offset)
 {
     pid->p_error = desired - pos;
     // I error and D error might not work due to integer math
@@ -38,7 +38,8 @@ uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired)
 
     int32_t control = pid->Kp * pid->p_error
                     + pid->Ki * pid->i_error
-                    + pid->Kd * pid->d_error;
+                    + pid->Kd * pid->d_error
+                    + offset;
     
     control /= SCALING_FACTOR;
 
@@ -46,9 +47,9 @@ uint16_t control_update(pid_t* pid, int32_t pos, uint32_t dT, int32_t desired)
     {
         control = MAX_PWM;
     }
-    else if (control < 0)
+    else if (control < 2)
     {
-        control = 0;
+        control = 2;
     }
     
     return (uint32_t) control;

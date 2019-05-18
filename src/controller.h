@@ -20,7 +20,7 @@ pid_t initController(uint16_t Kp, uint16_t Ki, uint16_t Kd);
 // *******************************************************
 // controlUpdate: Updates the control output based on the 
 // current system error and gains 
-uint16_t control_update(pid_t *pid, int32_t pos, uint32_t dT, int32_t desired);
+uint16_t control_update(pid_t *pid, int32_t pos, uint32_t dT, int32_t desired, int32_t offset);
 
 
 #endif 
