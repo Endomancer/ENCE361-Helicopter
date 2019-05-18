@@ -54,7 +54,7 @@ void updateYaw(uint32_t time)
         break;
     }
 
-    setMainRotorSpeed(control);
+    setTailRotorSpeed(control);
     prevTime = time;
 }
 
