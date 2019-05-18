@@ -35,6 +35,7 @@ uint16_t getTailRotorDuty()
 // Set main rotor speed (between 0 and ROTOR_DUTY_LIMIT)
 void setMainRotorSpeed(uint16_t duty)
 {
+    // Limit upper rotor speed
     if (duty > ROTOR_DUTY_LIMIT)
     {
         duty = ROTOR_DUTY_LIMIT;
@@ -46,34 +47,11 @@ void setMainRotorSpeed(uint16_t duty)
 // Set tail rotor speed (between 0 and ROTOR_DUTY_LIMIT)
 void setTailRotorSpeed(uint16_t duty)
 {
+    // Limit upper rotor speed
     if (duty > ROTOR_DUTY_LIMIT)
     {
         duty = ROTOR_DUTY_LIMIT;
     }
 
     setPWMDuty(rotorTail, duty);
-}
-
-// Enable main rotor
-void enableMainRotor()
-{
-    enablePWM(rotorMain);
-}
-
-// Enable tail rotor
-void enableTailRotor()
-{
-    enablePWM(rotorTail);
-}
-
-// Disable main rotor
-void disableMainRotor()
-{
-    disablePWM(rotorMain);
-}
-
-// Disable tail rotor
-void disableTailRotor()
-{
-    disablePWM(rotorTail);
 }
