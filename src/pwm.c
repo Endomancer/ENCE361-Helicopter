@@ -48,7 +48,7 @@ pwm_t* initPWM(pwm_outputs_t output)
 // Get the duty cycle of a PWM output
 uint16_t getPWMDuty(pwm_t* pwm)
 {
-    return (uint16_t) pwm->width * PERCENT / pwm->period;
+    return PWMPulseWidthGet(pwm->base, pwm->outnum) * PERCENT / pwm->period;
 }
 
 // Set the duty cycle of a PWM output
@@ -57,7 +57,21 @@ void setPWMDuty(pwm_t* pwm, uint16_t duty)
 {
     // Compute PWM width using the period
     pwm->width = pwm->period * duty / PERCENT;
-    PWMPulseWidthSet(pwm->base, pwm->outnum, pwm->width);
+    
+    // Disable the PWM output if the duty cycle is zero since
+    // the PWM modules cannot output a zero DC voltage.
+    if (duty == 0)
+    {
+        // Disable the output before setting the duty cycle
+        disablePWM(pwm);
+        PWMPulseWidthSet(pwm->base, pwm->outnum, pwm->width);
+    }
+    else
+    {
+        // Set duty cycle before enabling output
+        PWMPulseWidthSet(pwm->base, pwm->outnum, pwm->width);
+        enablePWM(pwm);
+    }
 }
 
 // Set the frequency of a PWM output

@@ -8,7 +8,8 @@
 #include "uart.h"
 #include "pwm.h"
 #include "controller.h"
-#include "rotors.h"
+#include "altitude.h"
+#include "yaw.h"
 
 #define STACK_SIZE 64
 
@@ -58,37 +59,28 @@ void vButtonsTask(void *pvParameters)
         {
             if (switch_state == PUSHED)
             {
-                // TODO set mode to flying/taking off
-        
+                changeMode(FLYING); // Start rotors
             }
             else if (switch_state == RELEASED)
             {
-                // TODO set mode to landing
-
+                changeMode(LANDING); // Land helicopter
             }
         }
         else if (checkButton(LEFT) == PUSHED)
         {
-            // TODO Rotate 15deg CCW
-            desiredYaw -= 448/360*15;
-            
+            decreaseYaw(); // Rotate 15 degrees counterclockwise
         }
         else if (checkButton(RIGHT) == PUSHED)
         {
-            // TODO Rotate 15deg CW
-            desiredYaw += 448/360*15;
-
+            increaseYaw(); // Rotate 15 degrees clockwise
         }
         else if (checkButton(UP) == PUSHED)
         {
-            // TODO Increase altitude by 10%
-            if (desiredAltitude < 993) desiredAltitude += 993/10;
-            
+            increaseAltitude(); // Increase altitude by 10%
         }
         else if (checkButton(DOWN) == PUSHED)
         {
-            // TODO Decrease altitude by 10%
-            if (desiredAltitude > 0) desiredAltitude -= 993/10;
+            decreaseAltitude(); // Decrease altitude by 10%
         }    
 
         vTaskDelay(pdMS_TO_TICKS(BUTTON_POLL_RATE_MS));
@@ -259,21 +251,13 @@ void vUARTTask(void *pvParameters)
 
 void vControllerTask(void *pvParameters)
 {
-    // Should probably initialise these somewhere else
-    pid_t MainPID = initController(10,0,0); // KP,KI,KD -- will probably change to iterate later
-    pid_t TailPID = initController(10,0,0);
     while(1)
     {
-        uint32_t xLastWakeTime = xTaskGetTickCount();
-        // TODO a way of getting desired altitude and yaw, ie step input
-                // dT might not give a value due to integer math --need to fix
-        uint16_t MainControl = control_update(&MainPID,getHeight(), xLastWakeTime/CPU_CLOCK_SPEED, desiredAltitude, ALTITUDE_OFFSET);
-        uint16_t TailControl = control_update(&TailPID,getQuadAngle()*20, xLastWakeTime/CPU_CLOCK_SPEED, desiredYaw*20, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
-        // TODO control to PWM
-        enableMainRotor();
-        enableTailRotor();
-        setMainRotorSpeed(MainControl);
-        setTailRotorSpeed(TailControl);
+        TickType_t xLastWakeTime = xTaskGetTickCount();
+        
+        updateAltitude(xTaskGetTickCount());
+        updateYaw(xTaskGetTickCount());
+
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONTROLLER_UPDATE_RATE_MS));
     }
 }

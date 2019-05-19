@@ -62,10 +62,16 @@ void initADC(void)
     ADCIntEnable(ADC_BASE, ADC_SEQUENCE);
 }
 
-// Returns the average value in the circular buffer
+// Return the average value in the circular buffer
 uint32_t averageADCVal()
 {
     return averageCircBuf(&circBuf);
+}
+
+// Return the average ADC value relative to the calibrated reference
+uint32_t getAltitude()
+{
+    return (((int32_t)calibrationReference) - averageADCVal());
 }
 
 // Calculate height as a percentage
