@@ -5,7 +5,7 @@
 
 #define BUF_SIZE 3
 #define SCALING_FACTOR 100 // TODO
-#define MAX_PWM 80
+#define MAX_PWM 98
 
 // Initialise a PID controller instance
 void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
@@ -49,9 +49,9 @@ uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT, int32_t offset)
     {
         control = MAX_PWM;
     }
-    else if (control < 0)
+    else if (control < 2)
     {
-        control = 0;
+        control = 2;
     }
     
     return control;

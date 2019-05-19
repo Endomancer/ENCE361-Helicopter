@@ -12,6 +12,8 @@
 #include "yaw.h"
 
 #define STACK_SIZE 64
+
+
 int32_t desiredAltitude,desiredYaw = 0;
 typedef enum
 {
