@@ -36,9 +36,6 @@ void updateYaw(uint32_t time)
     
     case SWEEPING:
         // TODO: Sweeping booty
-        while(!referenceFound());
-        pidYaw.reference = 0;
-        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
         break;
     
     case LANDING: // Keep yaw controller running while landing
@@ -64,6 +61,7 @@ void changeYawMode(control_states_t newState)
     switch (state)
     {
     case SWEEPING:
+        updateGains(&pidYaw,100, 0, 0);
     case LANDED:
         pidYaw.reference = 0;
         break;
