@@ -61,17 +61,17 @@ void changeYawMode(control_states_t newState)
     switch (state)
     {
     case SWEEPING:
-        updateGains(&pidYaw,100, 0, 0);
+        updateGains(&pidYaw,100, 10, 0);
     case LANDED:
         pidYaw.reference = 0;
         break;
     
     case FLYING:
-        updateGains(&pidYaw, 100, 0, 0);
+        updateGains(&pidYaw, 100, 10, 0);
         break;
     
     case LANDING:
-        updateGains(&pidYaw, 100, 0, 0);
+        updateGains(&pidYaw, 100, 10, 0);
         break;
     }
 }
