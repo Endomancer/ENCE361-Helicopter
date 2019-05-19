@@ -34,12 +34,15 @@ void updateAltitude(uint32_t time)
     switch (state)
     {
     case SWEEPING: // TODO
+        if (referenceFound())
+        {
         if (pidMain.reference != 0)
         {
             pidMain.reference = 0;
             error = pidMain.reference - getAltitude();
         }
         control = controlUpdate(&pidMain, error, deltaTime, MAIN_OFFSET);
+        }
     case LANDED:
         control = 0;
         break;
