@@ -21,6 +21,7 @@ void init()
     initQaud();
     initRotors();
     initUART();
+    initReference();
     initAltitude();
     initYaw();
 }

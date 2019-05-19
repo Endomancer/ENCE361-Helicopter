@@ -4,6 +4,7 @@
 #include "config.h"
 #include "rotors.h"
 #include "yaw.h"
+#include "calibration.h"
 
 static pid_t pidMain;
 static control_states_t state = LANDED;
@@ -33,6 +34,9 @@ void updateAltitude(uint32_t time)
     switch (state)
     {
     case SWEEPING: // TODO
+        if (!referenceFound())
+            sweepBooty();
+        control = controlUpdate(&pidMain, 0, deltaTime, MAIN_OFFSET);
     case LANDED:
         control = 0;
         break;
@@ -44,7 +48,7 @@ void updateAltitude(uint32_t time)
         break;
     
     case LANDING:
-        pidMain.reference -= 1; // TODO : Find appropriate landing speed
+        pidMain.reference -= 5; // TODO : Find appropriate landing speed
         if (pidMain.reference <= 0)
         {
             changeMode(LANDED);

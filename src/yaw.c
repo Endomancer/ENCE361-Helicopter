@@ -3,6 +3,7 @@
 #include "config.h"
 #include "rotors.h"
 #include "quad.h"
+#include "calibration.h"
 
 static pid_t pidYaw;
 static control_states_t state = LANDED;
@@ -35,9 +36,14 @@ void updateYaw(uint32_t time)
     
     case SWEEPING:
         // TODO: Sweeping booty
+        while(!referenceFound());
+        pidYaw.reference = 0;
+        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
         break;
     
     case LANDING: // Keep yaw controller running while landing
+        pidYaw.reference = 0;
+        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
     case FLYING:
         control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
         if (control < MIN_FLYING_DUTY)
