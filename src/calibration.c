@@ -32,8 +32,6 @@ void sweepBooty()
 
     resetQuad();
     foundReference = 1;
-    setTailRotorSpeed(30);
-    setMainRotorSpeed(30);
 }
 
 bool referenceFound ()
