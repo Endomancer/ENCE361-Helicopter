@@ -10,6 +10,7 @@
 #include "controller.h"
 #include "altitude.h"
 #include "yaw.h"
+#include "calibration.h"
 
 #define STACK_SIZE 64
 
@@ -59,7 +60,21 @@ void vButtonsTask(void *pvParameters)
         {
             if (switch_state == PUSHED)
             {
-                changeMode(FLYING); // Start rotors
+                if (!foundReference())
+                {
+                    sweepBooty();
+                }
+                else if (!atReference) 
+                {
+                    changeMode(SWEEPING); // Start rotors
+                }
+                else
+                {
+                    // change state machine to flying
+                    changeMode(FLYING);
+                }
+                
+                
             }
             else if (switch_state == RELEASED)
             {

@@ -34,9 +34,12 @@ void updateAltitude(uint32_t time)
     switch (state)
     {
     case SWEEPING: // TODO
-        if (!referenceFound())
-            sweepBooty();
-        control = controlUpdate(&pidMain, 0, deltaTime, MAIN_OFFSET);
+        if (pidMain.reference != 0)
+        {
+            pidMain.reference = 0;
+            error = pidMain.reference - getAltitude();
+        }
+        control = controlUpdate(&pidMain, error, deltaTime, MAIN_OFFSET);
     case LANDED:
         control = 0;
         break;

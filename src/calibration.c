@@ -28,7 +28,7 @@ void sweepBooty()
     setTailRotorSpeed(30);
     // wait for the reference signal to turn high
     
-    while (GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
+    while (!atReference);
 
     resetQuad();
     foundReference = 1;
@@ -37,4 +37,9 @@ void sweepBooty()
 bool referenceFound ()
 {
     return foundReference;
+}
+
+bool atReference ()
+{
+    return !(GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
 }

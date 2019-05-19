@@ -9,4 +9,5 @@ void sweepBooty();
 
 bool referenceFound();
 
+bool atReference();
 #endif
