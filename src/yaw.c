@@ -40,7 +40,7 @@ void updateYaw(uint32_t time)
         {
             pidYaw.reference = 0;
         }
-        if (foundReference())
+        if (referenceFound())
         control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, MAIN_OFFSET);
         break;
     

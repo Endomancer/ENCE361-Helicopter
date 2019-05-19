@@ -60,11 +60,11 @@ void vButtonsTask(void *pvParameters)
         {
             if (switch_state == PUSHED)
             {
-                if (!foundReference())
+                if (!referenceFound())
                 {
                     sweepBooty();
                 }
-                else if (!atReference) 
+                else if (!atReference()) 
                 {
                     changeMode(SWEEPING); // Start rotors
                 }

@@ -21,19 +21,6 @@ void initReference()
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
 }
 
-void sweepBooty()
-{
-    // turn on tail rotor at 40% duty
-    setMainRotorSpeed(10);
-    setTailRotorSpeed(30);
-    // wait for the reference signal to turn high
-    
-    while (!atReference);
-
-    resetQuad();
-    foundReference = 1;
-}
-
 bool referenceFound ()
 {
     return foundReference;
@@ -43,3 +30,17 @@ bool atReference ()
 {
     return !(GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
 }
+
+void sweepBooty()
+{
+    // turn on tail rotor at 40% duty
+    setMainRotorSpeed(10);
+    setTailRotorSpeed(30);
+    // wait for the reference signal to turn high
+    
+    while (!atReference());
+
+    resetQuad();
+    foundReference = 1;
+}
+
