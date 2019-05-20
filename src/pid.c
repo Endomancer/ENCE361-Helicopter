@@ -1,6 +1,6 @@
 //* PID controller for heli project
 
-#include "controller.h"
+#include "pid.h"
 #include "config.h"
 
 #define BUF_SIZE 3

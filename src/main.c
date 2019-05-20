@@ -7,7 +7,6 @@
 #include "rotors.h"
 #include "tasks.h"
 #include "uart.h"
-#include "controller.h"
 #include "calibration.h"
 #include "altitude.h"
 #include "yaw.h"

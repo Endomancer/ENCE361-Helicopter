@@ -1,6 +1,6 @@
 #include "altitude.h"
 #include "adc.h"
-#include "controller.h"
+#include "pid.h"
 #include "config.h"
 #include "rotors.h"
 #include "yaw.h"

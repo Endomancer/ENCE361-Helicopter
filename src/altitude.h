@@ -2,7 +2,7 @@
 #define ALTITUDE_H
 
 #include <stdint.h>
-#include "controller.h"
+#include "pid.h"
 
 // Initialise altitude controller
 void initAltitude();

@@ -2,7 +2,7 @@
 #define YAW_H
 
 #include <stdint.h>
-#include "controller.h"
+#include "pid.h"
 
 // Initialse yaw controller
 void initYaw();

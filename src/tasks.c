@@ -7,7 +7,7 @@
 #include "config.h"
 #include "uart.h"
 #include "pwm.h"
-#include "controller.h"
+#include "pid.h"
 #include "altitude.h"
 #include "yaw.h"
 #include "calibration.h"

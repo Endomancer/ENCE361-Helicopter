@@ -1,5 +1,5 @@
 #include "yaw.h"
-#include "controller.h"
+#include "pid.h"
 #include "config.h"
 #include "rotors.h"
 #include "quad.h"
