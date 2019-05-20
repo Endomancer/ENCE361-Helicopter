@@ -4,11 +4,11 @@
 #include <stdint.h>
 #include "pid.h"
 
-// Initialise altitude controller
-void initAltitude();
+// Initialise controller
+void initController();
 
-// Update altitude controller
-void updateAltitude(uint32_t deltaTime);
+// Update controller
+void updateController(uint32_t deltaTime);
 
 // Change controller mode
 void changeMode(control_states_t newState);
@@ -20,5 +20,13 @@ void increaseAltitude();
 // Decrease altitude by 10%
 // Only used while flying
 void decreaseAltitude();
+
+// Increase yaw by 15 degrees (clockwise)
+// Only used while flying
+void increaseYaw();
+
+// Decrease yaw by 15 degrees (counterclockwise)
+// Only used while flying
+void decreaseYaw();
 
 #endif

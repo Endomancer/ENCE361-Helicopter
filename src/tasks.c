@@ -8,8 +8,7 @@
 #include "uart.h"
 #include "pwm.h"
 #include "pid.h"
-#include "altitude.h"
-#include "yaw.h"
+#include "controller.h"
 #include "calibration.h"
 
 #define STACK_SIZE 64
@@ -262,8 +261,7 @@ void vControllerTask(void *pvParameters)
     {
         TickType_t xLastWakeTime = xTaskGetTickCount();
 
-        updateAltitude(xTaskGetTickCount());
-        updateYaw(xTaskGetTickCount());
+        updateController(xTaskGetTickCount());
 
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONTROLLER_UPDATE_RATE_MS));
     }

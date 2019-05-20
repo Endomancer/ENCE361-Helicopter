@@ -8,8 +8,7 @@
 #include "tasks.h"
 #include "uart.h"
 #include "calibration.h"
-#include "altitude.h"
-#include "yaw.h"
+#include "controller.h"
 
 // Initialise peripherals
 void init()
@@ -22,8 +21,7 @@ void init()
     initRotors();
     initUART();
     initReference();
-    initAltitude();
-    initYaw();
+    initController();
 }
 
 int main(void)
