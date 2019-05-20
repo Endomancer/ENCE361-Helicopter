@@ -5,6 +5,7 @@
 
 #define BUF_SIZE 3
 #define MAX_PWM 98
+#define MIN_PWM 2
 
 // Initialise a PID controller instance
 void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
@@ -30,12 +31,14 @@ void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
 // Update the controller output based on the current system error and gains 
 uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT, int32_t offset)
 {
+    pid->d_error = (error - pid->p_error) * CPU_CLOCK_SPEED / dT;
     pid->p_error = error;
     pid->i_error += pid->p_error * dT / CPU_CLOCK_SPEED;
-    pid->d_error = (pid->p_error - pid->d_error) * CPU_CLOCK_SPEED / dT;
 
     if (pid->i_error > 500)
         pid->i_error = 500;
+    else if (pid->i_error < -500)
+        pid->i_error = -500;
 
     int32_t control = pid->Kp * pid->p_error
                     + pid->Ki * pid->i_error / SCALING_FACTOR
@@ -48,9 +51,9 @@ uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT, int32_t offset)
     {
         control = MAX_PWM;
     }
-    else if (control < 2)
+    else if (control < MIN_PWM)
     {
-        control = 2;
+        control = MIN_PWM;
     }
     
     return control;
