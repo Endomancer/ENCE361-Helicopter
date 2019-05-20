@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "rotors.h"
 #include "quad.h"
+#include "calibration.h"
 
 #include "inc/hw_types.h"
 #include "inc/hw_gpio.h"
@@ -18,7 +19,15 @@ void initReference()
     // Configure pins
     GPIOPadConfigSet(GPIO_PORTC_BASE, GPIO_PIN_4, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
     // Configure pins as inputs
+
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
+
+    GPIOIntTypeSet(GPIO_PORTC_BASE, GPIO_PIN_4, GPIO_FALLING_EDGE);
+        
+    GPIOIntRegister(GPIO_PORTC_BASE, RefIntHandler); 
+    
+    // Enable interrupts
+    GPIOIntEnable(GPIO_PORTC_BASE, GPIO_INT_PIN_4);
 
     foundReference = false;
 }
@@ -33,16 +42,9 @@ bool atReference()
     return !(GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
 }
 
-void sweepBooty()
+void RefIntHandler()
 {
-    // turn on tail rotor at 40% duty
-    //setMainRotorSpeed(10);
-    //setTailRotorSpeed(30);
-    // wait for the reference signal to turn high
-
-    if (atReference())
-    {
-        resetQuad();
-        foundReference = true;
-    }
+    resetQuad();
+    foundReference = true;
+    GPIOIntDisable(GPIO_PORTC_BASE, GPIO_INT_PIN_4);
 }

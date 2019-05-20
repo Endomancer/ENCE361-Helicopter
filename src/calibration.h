@@ -5,9 +5,10 @@
 
 void initReference();
 
-void sweepBooty();
 
 bool referenceFound();
 
 bool atReference();
+
+void RefIntHandler();
 #endif
