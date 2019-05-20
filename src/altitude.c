@@ -126,3 +126,8 @@ void decreaseAltitude()
         pidMain.reference = MAX_HEIGHT * reference / PERCENT;
     }
 }
+
+int32_t getAltitudeReference()
+{
+    return pidMain.reference;
+}

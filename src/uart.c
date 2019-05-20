@@ -64,21 +64,30 @@ void UARTSend(char *pucBuffer)
 //**********************************************************************
 // Transmit the helicopter altitude via UART0
 //**********************************************************************
-void UARTAltitude(int16_t altitude)
+void UARTAltitude(int16_t altitude, int32_t reference)
 {
-    char string[20]; // The string only needs 18 characters
-    usnprintf(string, sizeof(string), "Altitude  = %4d%%\n", altitude);
+    char string[26]; // The string only needs 18 characters
+    usnprintf(string, sizeof(string), "Altitude  = %4d [%d]\n", altitude, ((reference+1)*PERCENT/MAX_HEIGHT));
     UARTSend(string);
 }
 
 //**********************************************************************
 // Transmit the helicopter angle via UART0
 //**********************************************************************
-void UARTAngle(int16_t angle)
+void UARTAngle(int16_t angle, int32_t reference)
 {
-    char string[22]; // The string only 22 characters
-
-    usnprintf(string, sizeof(string), "Angle     = %4ddeg\n", angle);
+    char string[28]; // The string only 22 characters
+    int32_t roundedReference;
+    if (reference >= 0)
+    {
+        roundedReference = reference + 1;
+    }
+    else
+    {
+        roundedReference = reference - 1;
+    }
+    
+    usnprintf(string, sizeof(string), "Angle     = %4ddeg [%d]\n", angle, (roundedReference*DEGREES/ROT_COUNT));
     UARTSend(string);
 }
 

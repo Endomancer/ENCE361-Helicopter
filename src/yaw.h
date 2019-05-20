@@ -21,4 +21,7 @@ void increaseYaw();
 // Only used while flying
 void decreaseYaw();
 
+// Return the yaw reference
+int32_t getYawReference();
+
 #endif

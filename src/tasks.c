@@ -242,8 +242,8 @@ void vUARTTask(void *pvParameters)
                 UARTCalibrating(false, false);
             }
 
-            UARTAltitude(getHeight());
-            UARTAngle(getQuadAngle());
+            UARTAltitude(getHeight(), getAltitudeReference());
+            UARTAngle(getQuadAngle(), getYawReference());
             UARTTailPWM();
             UARTMainPWM();
             break;

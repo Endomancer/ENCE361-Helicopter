@@ -21,4 +21,7 @@ void increaseAltitude();
 // Only used while flying
 void decreaseAltitude();
 
+// Return the altitude reference
+int32_t getAltitudeReference();
+
 #endif

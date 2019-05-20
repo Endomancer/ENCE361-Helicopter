@@ -104,3 +104,8 @@ void decreaseYaw()
         pidYaw.reference = ROT_COUNT * reference / DEGREES;
     }
 }
+
+int32_t getYawReference()
+{
+    return pidYaw.reference;
+}
