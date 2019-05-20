@@ -39,7 +39,7 @@ uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT, int32_t offset)
         pid->i_error = 500;
 
     int32_t control = pid->Kp * pid->p_error
-                    + pid->Ki * pid->i_error
+                    + pid->Ki * pid->i_error/ SCALING_FACTOR
                     + pid->Kd * pid->d_error
                     + SCALING_FACTOR * offset;
     

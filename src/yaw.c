@@ -36,7 +36,7 @@ void updateYaw(uint32_t time)
 
     case SWEEPING:
         // TODO: Sweeping booty
-        control = 30;
+        control = 20;
         break;
 
     case LANDING: // Keep yaw controller running while landing
@@ -62,17 +62,17 @@ void changeYawMode(control_states_t newState)
     switch (state)
     {
     case SWEEPING:
-        updateGains(&pidYaw, 100, 10, 0);
+        updateGains(&pidYaw, 100, 1, 0);
     case LANDED:
         pidYaw.reference = 0;
         break;
 
     case FLYING:
-        updateGains(&pidYaw, 100, 10, 0);
+        updateGains(&pidYaw, 100, 1, 0);
         break;
 
     case LANDING:
-        updateGains(&pidYaw, 100, 10, 0);
+        updateGains(&pidYaw, 100, 1, 0);
         break;
     }
 }
