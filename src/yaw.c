@@ -33,29 +33,17 @@ void updateYaw(uint32_t time)
     case LANDED:
         control = 0;
         break;
-    
+
     case SWEEPING:
         // TODO: Sweeping booty
-        if (referenceFound())
-        {
-            if (pidYaw.reference != 0)
-            {
-                pidYaw.reference = 0;
-            }
-            if (referenceFound())
-            control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, MAIN_OFFSET);
-        } else
-        {
-            control = 30;
-        }
-        
+        control = 30;
         break;
-    
+
     case LANDING: // Keep yaw controller running while landing
         pidYaw.reference = 0;
-        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
+        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty() * YAW_OFFSET_MULTIPLIER);
     case FLYING:
-        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty()*YAW_OFFSET_MULTIPLIER);
+        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, getMainRotorDuty() * YAW_OFFSET_MULTIPLIER);
         if (control < MIN_FLYING_DUTY)
             control = MIN_FLYING_DUTY;
         break;
@@ -74,15 +62,15 @@ void changeYawMode(control_states_t newState)
     switch (state)
     {
     case SWEEPING:
-        updateGains(&pidYaw,100, 10, 0);
+        updateGains(&pidYaw, 100, 10, 0);
     case LANDED:
         pidYaw.reference = 0;
         break;
-    
+
     case FLYING:
         updateGains(&pidYaw, 100, 10, 0);
         break;
-    
+
     case LANDING:
         updateGains(&pidYaw, 100, 10, 0);
         break;
@@ -98,7 +86,7 @@ void increaseYaw()
         reference += YAW_INCREMENT;
         if (reference > DEGREES / 2)
             reference -= DEGREES;
-        
+
         pidYaw.reference = ROT_COUNT * reference / DEGREES;
     }
 }
@@ -112,7 +100,7 @@ void decreaseYaw()
         reference -= YAW_INCREMENT;
         if (reference < -DEGREES / 2)
             reference += DEGREES;
-        
+
         pidYaw.reference = ROT_COUNT * reference / DEGREES;
     }
 }

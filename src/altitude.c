@@ -36,15 +36,15 @@ void updateAltitude(uint32_t time)
     case SWEEPING: // TODO
         if (referenceFound())
         {
-            if (pidMain.reference != 0)
-            {
-                pidMain.reference = 0;
-                error = pidMain.reference - getAltitude();
-            }
             control = controlUpdate(&pidMain, error, deltaTime, MAIN_OFFSET);
-        } else {
-            control = 10;
+            changeMode(FLYING);
         }
+        else
+        {
+            control = 10;
+            sweepBooty();
+        }
+        break;
 
     case LANDED:
         control = 0;
@@ -82,6 +82,7 @@ void changeMode(control_states_t newState)
     switch (state)
     {
     case SWEEPING:
+        changeYawMode(SWEEPING);
     case LANDED:
         pidMain.reference = 0;
         break;

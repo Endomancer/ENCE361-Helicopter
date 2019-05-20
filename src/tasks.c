@@ -14,8 +14,7 @@
 
 #define STACK_SIZE 64
 
-
-int32_t desiredAltitude,desiredYaw = 0;
+int32_t desiredAltitude, desiredYaw = 0;
 typedef enum
 {
     NORMAL,
@@ -32,15 +31,15 @@ typedef enum
 } notification_t;
 
 TaskHandle_t xCalibrationHandle = NULL; // Calibration task handler
-TaskHandle_t xDisplayHandle = NULL; // Display task handler
-TaskHandle_t xUARTHandle = NULL; //UART task handler
+TaskHandle_t xDisplayHandle = NULL;     // Display task handler
+TaskHandle_t xUARTHandle = NULL;        //UART task handler
 
 void vADCTask(void *pvParameters)
 {
-    while(1)
+    while (1)
     {
         TickType_t xLastWakeTime = xTaskGetTickCount();
-        
+
         ADCProcessorTrigger(ADC_BASE, ADC_SEQUENCE);
 
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(ADC_SAMPLE_RATE_MS));
@@ -55,26 +54,20 @@ void vButtonsTask(void *pvParameters)
         updateButtons();
 
         uint8_t switch_state = checkButton(SWITCH);
-        
+
         if (switch_state)
         {
             if (switch_state == PUSHED)
             {
-                if (!referenceFound())
-                {
-                    sweepBooty();
-                }
-                else if (!atReference()) 
-                {
-                    changeMode(SWEEPING); // Start rotors
+                if (referenceFound())
+                {   
+                    // Change state machine to flying
+                    changeMode(FLYING);
                 }
                 else
                 {
-                    // change state machine to flying
-                    changeMode(FLYING);
+                    changeMode(SWEEPING); // Start rotors
                 }
-                
-                
             }
             else if (switch_state == RELEASED)
             {
@@ -96,7 +89,7 @@ void vButtonsTask(void *pvParameters)
         else if (checkButton(DOWN) == PUSHED)
         {
             decreaseAltitude(); // Decrease altitude by 10%
-        }    
+        }
 
         vTaskDelay(pdMS_TO_TICKS(BUTTON_POLL_RATE_MS));
     }
@@ -104,7 +97,7 @@ void vButtonsTask(void *pvParameters)
 
 void vCalibrationTask(void *pvParameters)
 {
-    while(1)
+    while (1)
     {
         // Start calibration display task
         xTaskNotify(xDisplayHandle, CALIBRATE, eSetValueWithOverwrite);
@@ -144,39 +137,39 @@ void vDisplayTask(void *pvParameters)
 
         switch (notification)
         {
-            case CALIBRATE:
-                calibrating = !calibrating;
-                clearDisplay();
-                
-                if (calibrating)
-                {
-                    // Save display state
-                    prevState = state;
-                    state = CALIBRATING;
-                }
-                else
-                {
-                    // Restore display state
-                    state = prevState;
-                    // Reset calibration display function
-                    displayCalibrating(calibrating);
-                }
-                break;
-            
-            case NEXT_STATE:
-                // Do not change display state when calibrating
-                if (!calibrating)
-                {
-                    // Cycle through display states: NORMAL -> ADC -> OFF
-                    state = state < OFF ? state + 1 : NORMAL;
+        case CALIBRATE:
+            calibrating = !calibrating;
+            clearDisplay();
 
-                    // Clear display and redraw title
-                    clearDisplay();
-                }
-                break;
-        
-            default: // No action
-                break;
+            if (calibrating)
+            {
+                // Save display state
+                prevState = state;
+                state = CALIBRATING;
+            }
+            else
+            {
+                // Restore display state
+                state = prevState;
+                // Reset calibration display function
+                displayCalibrating(calibrating);
+            }
+            break;
+
+        case NEXT_STATE:
+            // Do not change display state when calibrating
+            if (!calibrating)
+            {
+                // Cycle through display states: NORMAL -> ADC -> OFF
+                state = state < OFF ? state + 1 : NORMAL;
+
+                // Clear display and redraw title
+                clearDisplay();
+            }
+            break;
+
+        default: // No action
+            break;
         }
 
         switch (state)
@@ -195,7 +188,7 @@ void vDisplayTask(void *pvParameters)
 
         case CALIBRATING:
             displayCalibrating(calibrating);
-            // Slow down display refresh rate: only need to display dots 
+            // Slow down display refresh rate: only need to display dots
             vTaskDelay(pdMS_TO_TICKS(CALIBRATING_DOT_RATE_MS - DISPLAY_REFRESH_RATE_MS));
             break;
 
@@ -220,25 +213,25 @@ void vUARTTask(void *pvParameters)
 
         switch (notification)
         {
-            case CALIBRATE:
-                calibrating = !calibrating;
-                
-                if (calibrating)
-                {
-                    // Save UART state
-                    prevState = state;
-                    state = CALIBRATING;
-                }
-                else
-                {
-                    // Restore display state
-                    state = prevState;
-                    // Reset calibration display function
-                }
-                break;
-        
-            default: // No action
-                break;
+        case CALIBRATE:
+            calibrating = !calibrating;
+
+            if (calibrating)
+            {
+                // Save UART state
+                prevState = state;
+                state = CALIBRATING;
+            }
+            else
+            {
+                // Restore display state
+                state = prevState;
+                // Reset calibration display function
+            }
+            break;
+
+        default: // No action
+            break;
         }
         switch (state)
         {
@@ -247,7 +240,7 @@ void vUARTTask(void *pvParameters)
             if (!initial)
             {
                 initial = true;
-                UARTCalibrating(false,false);
+                UARTCalibrating(false, false);
             }
 
             UARTAltitude(getHeight());
@@ -266,10 +259,10 @@ void vUARTTask(void *pvParameters)
 
 void vControllerTask(void *pvParameters)
 {
-    while(1)
+    while (1)
     {
         TickType_t xLastWakeTime = xTaskGetTickCount();
-        
+
         updateAltitude(xTaskGetTickCount());
         updateYaw(xTaskGetTickCount());
 
@@ -284,6 +277,6 @@ void createTasks()
     xTaskCreate(vButtonsTask, "Poll Buttons", STACK_SIZE, NULL, 1, NULL);
     xTaskCreate(vCalibrationTask, "Calibrate", STACK_SIZE, NULL, 1, &xCalibrationHandle);
     xTaskCreate(vDisplayTask, "Display", STACK_SIZE, NULL, 1, &xDisplayHandle);
-    xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL,1, &xUARTHandle);
+    xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL, 1, &xUARTHandle);
     xTaskCreate(vControllerTask, "PID Controllers", STACK_SIZE, NULL, 1, NULL);
 }

@@ -10,7 +10,7 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/pin_map.h"
 
-static bool foundReference = 0;
+static bool foundReference = false;
 
 void initReference()
 {
@@ -19,14 +19,16 @@ void initReference()
     GPIOPadConfigSet(GPIO_PORTC_BASE, GPIO_PIN_4, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD);
     // Configure pins as inputs
     GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
+
+    foundReference = false;
 }
 
-bool referenceFound ()
+bool referenceFound()
 {
     return foundReference;
 }
 
-bool atReference ()
+bool atReference()
 {
     return !(GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
 }
@@ -34,13 +36,13 @@ bool atReference ()
 void sweepBooty()
 {
     // turn on tail rotor at 40% duty
-    setMainRotorSpeed(10);
-    setTailRotorSpeed(30);
+    //setMainRotorSpeed(10);
+    //setTailRotorSpeed(30);
     // wait for the reference signal to turn high
-    
-    while (!atReference());
 
-    resetQuad();
-    foundReference = 1;
+    if (atReference())
+    {
+        resetQuad();
+        foundReference = true;
+    }
 }
-
