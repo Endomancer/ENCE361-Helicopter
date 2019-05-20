@@ -60,13 +60,12 @@ void vButtonsTask(void *pvParameters)
             if (switch_state == PUSHED)
             {
                 if (referenceFound())
-                {   
-                    // Change state machine to flying
-                    changeMode(FLYING);
+                {
+                    changeMode(FLYING); // Start flying!
                 }
                 else
                 {
-                    changeMode(SWEEPING); // Start rotors
+                    changeMode(SWEEPING); // Sweep and find reference
                 }
             }
             else if (switch_state == RELEASED)
