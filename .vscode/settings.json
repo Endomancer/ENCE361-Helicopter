@@ -1,3 +1,8 @@
 {
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "display.h": "c",
+        "rotors.h": "c",
+        "stdint.h": "c"
+    }
 }

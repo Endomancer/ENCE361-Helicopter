@@ -1,16 +1,12 @@
 #include "quad.h"
 #include <stdbool.h>
-
+#include "config.h"
 #include "inc/hw_types.h"
 #include "inc/hw_gpio.h"
 #include "inc/hw_memmap.h"
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/pin_map.h"
-
-#define DEGREES 360
-#define SLOT_COUNT 112 // Number of slots in disk
-#define ROT_COUNT (SLOT_COUNT * 4) // State changes per rotation
 
 static int16_t quadPos;
 

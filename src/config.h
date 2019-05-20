@@ -13,8 +13,12 @@
 
 #define ADC_SAMPLE_RATE_HZ 100
 #define ADC_SAMPLE_RATE_MS (MILLISECONDS / ADC_SAMPLE_RATE_HZ)
-#define ADC_RANGE 4095
+#define ADC_RANGE 4096
 #define MAX_HEIGHT (ADC_RANGE * 8 / 33) // Corresponds to 0.8 V
+
+#define DEGREES 360
+#define SLOT_COUNT 112 // Number of slots in disk
+#define ROT_COUNT (SLOT_COUNT * 4) // State changes per rotation
 
 #define UART_REFRESH_RATE_MS 100
 
@@ -29,5 +33,16 @@
 
 #define PWM_FREQUENCY 200       // Frequency of main and tail PWM modules
 #define ROTOR_DUTY_LIMIT 90     // Maximum allowable duty cycle
+
+#define CONTROLLER_UPDATE_RATE_MS 100
+#define CPU_CLOCK_SPEED 20000000
+
+#define ALTITUDE_INCREMENT 10
+#define YAW_INCREMENT 15
+#define MIN_FLYING_DUTY 2
+
+#define SCALING_FACTOR 1000
+#define MAIN_OFFSET (35 * SCALING_FACTOR)
+#define YAW_OFFSET_MULTIPLIER (SCALING_FACTOR * 11 / 10)
 
 #endif

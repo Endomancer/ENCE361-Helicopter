@@ -7,6 +7,8 @@
 #include "rotors.h"
 #include "tasks.h"
 #include "uart.h"
+#include "calibration.h"
+#include "controller.h"
 
 // Initialise peripherals
 void init()
@@ -18,6 +20,8 @@ void init()
     initQaud();
     initRotors();
     initUART();
+    initReference();
+    initController();
 }
 
 int main(void)
