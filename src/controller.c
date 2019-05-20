@@ -56,7 +56,6 @@ void updateController(uint32_t time)
         {
             controlMain = 10;
             controlTail = 20;
-            sweepBooty();
             break;
         }
         else
@@ -114,7 +113,7 @@ void changeMode(control_states_t newState)
         break;
 
     case FLYING:
-        updateGains(&pidMain, 60, 10, 0);
+        updateGains(&pidMain, 60, 12, 0);
         updateGains(&pidTail, 800, 5, 0);
         break;
 
