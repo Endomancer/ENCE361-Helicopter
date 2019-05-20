@@ -1,37 +1,32 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef ALTITUDE_H
+#define ALTITUDE_H
 
 #include <stdint.h>
+#include "pid.h"
 
-// TODO: Yuck... but we don't have a better place to put it currently
-typedef enum
-{
-    LANDED,
-    SWEEPING,
-    FLYING,
-    LANDING
-} control_states_t;
+// Initialise controller
+void initController();
 
-// PID structure
-typedef struct
-{
-    uint16_t Kp;        // Proportional gain
-    uint16_t Ki;        // Integral gain
-    uint16_t Kd;        // Derivative gain
-    int32_t p_error;    // Proportional error
-    int32_t i_error;    // Integral error
-    int32_t d_error;    // Derivative error
-    int32_t reference;  // Reference value
-} pid_t;
+// Update controller
+void updateController(uint32_t deltaTime);
 
-// Initialise a PID controller instance
-void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
+// Change controller mode
+void changeMode(control_states_t newState);
 
-// Update the gains of a specified PID controller
-// Used for gain scheduling and experimentally finding gains
-void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
+// Increase altitude by 10%
+// Only used while flying
+void increaseAltitude();
 
-// Update the controller output based on the current system error and gains
-uint16_t controlUpdate(pid_t *pid, int32_t error, uint32_t dT, int32_t offset);
+// Decrease altitude by 10%
+// Only used while flying
+void decreaseAltitude();
 
-#endif 
+// Increase yaw by 15 degrees (clockwise)
+// Only used while flying
+void increaseYaw();
+
+// Decrease yaw by 15 degrees (counterclockwise)
+// Only used while flying
+void decreaseYaw();
+
+#endif
