@@ -38,13 +38,17 @@ void updateYaw(uint32_t time)
         // TODO: Sweeping booty
         if (referenceFound())
         {
-        if (pidYaw.reference != 0)
+            if (pidYaw.reference != 0)
+            {
+                pidYaw.reference = 0;
+            }
+            if (referenceFound())
+            control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, MAIN_OFFSET);
+        } else
         {
-            pidYaw.reference = 0;
+            control = 30;
         }
-        if (referenceFound())
-        control = controlUpdate(&pidYaw, getQuadDiff(pidYaw.reference), deltaTime, MAIN_OFFSET);
-        }
+        
         break;
     
     case LANDING: // Keep yaw controller running while landing

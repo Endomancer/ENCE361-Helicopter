@@ -42,7 +42,10 @@ void updateAltitude(uint32_t time)
                 error = pidMain.reference - getAltitude();
             }
             control = controlUpdate(&pidMain, error, deltaTime, MAIN_OFFSET);
+        } else {
+            control = 10;
         }
+
     case LANDED:
         control = 0;
         break;
