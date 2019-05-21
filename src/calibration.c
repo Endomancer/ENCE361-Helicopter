@@ -3,6 +3,7 @@
 #include "rotors.h"
 #include "quad.h"
 #include "calibration.h"
+#include "adc.h"
 
 #include "inc/hw_types.h"
 #include "inc/hw_gpio.h"
@@ -40,6 +41,18 @@ bool referenceFound()
 bool atReference()
 {
     return !(GPIOPinRead(GPIO_PORTC_BASE, GPIO_PIN_4) == GPIO_PIN_4);
+}
+
+bool findThreshold(int16_t* threshold)
+{
+    bool found = false;
+
+    if (getAltitude() <= 10)
+    {
+        *threshold++;
+        found = true;
+    }
+    return found;
 }
 
 void RefIntHandler()

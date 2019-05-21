@@ -12,6 +12,7 @@ static control_states_t state = LANDED;
 static int32_t referenceMain;
 static int32_t referenceTail;
 static uint32_t prevTime;
+static int16_t mainOffset = 20;
 
 // Initialise controller
 void initController()
@@ -32,6 +33,7 @@ void initController()
 // Update controller
 void updateController(uint32_t time)
 {
+    static bool foundThreshold = false;
     uint16_t controlMain = 0;
     uint16_t controlTail = 0;
     // Calculate error
@@ -54,8 +56,13 @@ void updateController(uint32_t time)
     case SWEEPING: // TODO
         if (!referenceFound())
         {
-            controlMain = 10;
-            controlTail = updatePID(&pidTail, 40, deltaTime, offsetTail);
+            
+            controlTail = updatePID(&pidTail, 10, deltaTime, offsetTail);
+            if (!foundThreshold)
+            {
+                foundThreshold = findThreshold(&mainOffset);
+            }
+            controlMain = mainOffset;
             break;
         }
         else
@@ -113,8 +120,8 @@ void changeMode(control_states_t newState)
         break;
 
     case FLYING:
-        updateGains(&pidMain, 60, 12, 0);
-        updateGains(&pidTail, 800, 5, 0);
+        updateGains(&pidMain, 65, 14, 0);
+        updateGains(&pidTail, 800, 25, 0);
         break;
 
     case LANDING:
