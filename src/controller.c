@@ -78,6 +78,8 @@ void updateController(uint32_t time)
 
     case LANDING:
         pidTail.reference = 0;
+        referenceTail = 0;
+        referenceMain -= 5;
         pidMain.reference -= 5; // TODO : Find appropriate landing speed
         if (pidMain.reference <= 0)
         {
@@ -114,6 +116,8 @@ void changeMode(control_states_t newState)
     case LANDED:
         pidMain.reference = 0;
         pidTail.reference = 0;
+        referenceMain = 0;
+        referenceTail = 0;
         break;
 
     case FLYING:
