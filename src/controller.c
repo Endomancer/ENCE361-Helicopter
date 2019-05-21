@@ -56,12 +56,10 @@ void updateController(uint32_t time)
     case SWEEPING: // TODO
         if (!referenceFound())
         {
-            controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
             if (!foundThreshold)
-            {
                 foundThreshold = findThreshold(&mainOffset);
-            }
             controlMain = mainOffset;
+            controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
             break;
         }
         else
