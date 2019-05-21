@@ -34,4 +34,10 @@ void updateGains(controller_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
 // Update the controller output based on the current system error and gains
 uint16_t updatePID(controller_t *pid, int32_t error, uint32_t dT, int32_t offset);
 
+// Clamp input value between minimum and maximum thresholds
+int32_t clamp(int32_t value, int32_t min, int32_t max);
+
+// Ramp the PID reference towards the desired reference
+void ramp(controller_t* pid, int32_t reference, int32_t increment);
+
 #endif 
