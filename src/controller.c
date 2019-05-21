@@ -14,6 +14,10 @@ static int32_t referenceTail;
 static uint32_t prevTime;
 static int16_t offsetMain = 20;
 
+// Internal functions used when updating the controller
+void rampMain(uint16_t increment);
+void rampTail(uint16_t increment);
+
 // Initialise controller
 void initController()
 {
@@ -69,30 +73,33 @@ void updateController(uint32_t time)
         }
 
     case FLYING:
+        rampMain(3);
+        rampTail(3);
+        // Update controllers
         controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
         controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
-        if (controlMain < MIN_FLYING_DUTY)
-            controlMain = MIN_FLYING_DUTY;
-        if (controlTail < MIN_FLYING_DUTY)
-            controlTail = MIN_FLYING_DUTY;
+        // Clamp duty cycle values
+        controlMain = clamp(controlMain, MIN_FLYING_DUTY, PERCENT);
+        controlTail = clamp(controlTail, MIN_FLYING_DUTY, PERCENT);
         break;
 
     case LANDING:
-        pidTail.reference = 0;
-        pidMain.reference -= 5; // TODO : Find appropriate landing speed
-        if (pidMain.reference <= 0)
+        rampMain(2); // TODO : Find appropriate landing speed
+        rampTail(2);
+
+        if (pidMain.reference == 0)
         {
             changeMode(LANDED);
             controlMain = 0;
         }
-        else // Continue running altitude controller until landed
+        else // Continue running controllers until landed
         {
+            // Update controllers
             controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
-            if (controlMain < MIN_FLYING_DUTY)
-                controlMain = MIN_FLYING_DUTY;
-            if (controlTail < MIN_FLYING_DUTY)
-                controlTail = MIN_FLYING_DUTY;
+            // Clamp duty cycle values
+            controlMain = clamp(controlMain, MIN_FLYING_DUTY, PERCENT);
+            controlTail = clamp(controlTail, MIN_FLYING_DUTY, PERCENT);
         }
         break;
     }
@@ -110,21 +117,29 @@ void changeMode(control_states_t newState)
     // TODO: Determine gains
     switch (state)
     {
-    case SWEEPING:
-        updateGains(&pidTail, 1000, 10, 0);
     case LANDED:
+        referenceMain = 0;
+        referenceTail = 0;
         pidMain.reference = 0;
         pidTail.reference = 0;
+        break;
+    
+    case SWEEPING:
+        updateGains(&pidTail, 1000, 10, 0);
         break;
 
     case FLYING:
         updateGains(&pidMain, 65, 14, 0);
-        updateGains(&pidTail, 800, 25, 0);
+        initPID(&pidTail, 800, 25, 0);
+        pidMain.reference = 0;
+        pidTail.reference = getQuad();
         break;
 
     case LANDING:
         updateGains(&pidMain, 50, 10, 0);
         updateGains(&pidTail, 800, 10, 0);
+        referenceMain = 0;
+        referenceTail = 0;
         break;
     }
 }
@@ -136,10 +151,9 @@ void increaseAltitude()
     if (state == FLYING)
     {
         referenceMain += ALTITUDE_INCREMENT;
-        if (referenceMain > PERCENT)
-            referenceMain = PERCENT;
+        referenceMain = clamp(referenceMain, 0, PERCENT);
 
-        pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
+        //pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
     }
 }
 
@@ -150,10 +164,9 @@ void decreaseAltitude()
     if (state == FLYING)
     {
         referenceMain -= ALTITUDE_INCREMENT;
-        if (referenceMain < 0)
-            referenceMain = 0;
+        referenceMain = clamp(referenceMain, 0, PERCENT);
 
-        pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
+        //pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
     }
 }
 
@@ -164,10 +177,9 @@ void increaseYaw()
     if (state == FLYING)
     {
         referenceTail += YAW_INCREMENT;
-        if (referenceTail > DEGREES / 2)
-            referenceTail -= DEGREES;
+        referenceTail = wrap(referenceTail, DEGREES);
 
-        pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
+        //pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
     }
 }
 
@@ -178,19 +190,47 @@ void decreaseYaw()
     if (state == FLYING)
     {
         referenceTail -= YAW_INCREMENT;
-        if (referenceTail < -DEGREES / 2)
-            referenceTail += DEGREES;
+        referenceTail = wrap(referenceTail, DEGREES);
 
-        pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
+        //pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
     }
 }
 
+// Return the reference height as a percentage
 int32_t getAltitudeReference()
 {
     return referenceMain;
 }
 
+// Return the reference angle in degrees
 int32_t getYawReference()
 {
     return referenceTail;
+}
+
+// Ramp the main reference towards the desired reference
+void rampMain(uint16_t increment)
+{
+    int32_t reference = referenceMain * MAX_HEIGHT / PERCENT;
+    increment = increment * MAX_HEIGHT / PERCENT;
+    ramp(&pidMain, reference, increment);
+}
+
+// Ramp the tail reference towards the desired reference
+void rampTail(uint16_t increment)
+{
+    int32_t reference = referenceTail * ROT_COUNT / DEGREES;
+    int16_t difference = wrap(reference - pidTail.reference, ROT_COUNT);
+    increment = increment * ROT_COUNT / DEGREES;
+
+    // Increment reference towards desired position
+    if (difference > increment)
+        pidTail.reference += increment;
+    else if (-difference > increment)
+        pidTail.reference -= increment;
+    else
+        pidTail.reference = reference;
+    
+    // Ensure reference is within valid range
+    pidTail.reference = wrap(pidTail.reference, ROT_COUNT);
 }
