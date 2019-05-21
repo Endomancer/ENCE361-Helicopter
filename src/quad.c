@@ -68,9 +68,13 @@ int16_t getQuadDiff(int16_t reference)
 // Wrap position between -(range / 2) and (range / 2 - 1)
 int16_t wrap(int16_t position, uint16_t range)
 {
+    // Wrap
     position = position % range;
+    // Ensure position falls within the desired range
     if (position >= range / 2)
         position -= range;
+    else if (position < -(range / 2))
+        position += range;
     
     return position;
 }
