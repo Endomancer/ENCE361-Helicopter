@@ -54,26 +54,17 @@ int16_t getQuad()
 // Returns and difference between a reference angle and the current position
 int16_t getQuadDiff(int16_t reference)
 {
-    // Calculate difference between
-    int16_t diff = reference - quadPos;
-
-    // Make sure that diff is in the acceptable range (-ROT_COUNT / 2) to (ROT_COUNT / 2 - 1)
-    // Wraps it if it is not (if the limits are exceeded)
-    diff -= diff >= (ROT_COUNT / 2) ? ROT_COUNT : 0;
-    diff += diff < (-ROT_COUNT / 2) ? ROT_COUNT : 0;
-    
-    return diff;
+    return wrap(reference - quadPos, ROT_COUNT);
 }
 
 // Wrap position between -(range / 2) and (range / 2 - 1)
 int16_t wrap(int16_t position, uint16_t range)
 {
-    // Wrap
     position = position % range;
     // Ensure position falls within the desired range
     if (position >= range / 2)
         position -= range;
-    else if (position < -(range / 2))
+    else if (-position > range / 2)
         position += range;
     
     return position;
@@ -100,10 +91,6 @@ void QuadIntHandler()
 
         // Increment/decrement position according to the lookup table
         quadPos += lookup[value];
-
-        // Ensure position remains between (-ROT_COUNT / 2) to (ROT_COUNT / 2 - 1)
-        // The position wraps if limits are exceeded
-        quadPos -= quadPos >= (ROT_COUNT / 2) ? ROT_COUNT : 0;
-        quadPos += quadPos < (-ROT_COUNT / 2) ? ROT_COUNT : 0;
+        quadPos = wrap(quadPos, ROT_COUNT);
     }
 }
