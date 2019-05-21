@@ -55,7 +55,7 @@ void updateController(uint32_t time)
         if (!referenceFound())
         {
             controlMain = 10;
-            controlTail = 20;
+            controlTail = updatePID(&pidTail, 40, deltaTime, offsetTail);
             break;
         }
         else
