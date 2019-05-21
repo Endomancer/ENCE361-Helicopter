@@ -89,7 +89,7 @@ void updateController(uint32_t time)
         }
         else // Continue running altitude controller until landed
         {
-            controlMain = updatePID(&pidMain, errorMain, deltaTime, MAIN_OFFSET);
+            controlMain = updatePID(&pidMain, errorMain, deltaTime, mainOffset * SCALING_FACTOR);
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
             if (controlMain < MIN_FLYING_DUTY)
                 controlMain = MIN_FLYING_DUTY;
