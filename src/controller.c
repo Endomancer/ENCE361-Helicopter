@@ -12,7 +12,7 @@ static control_states_t state = LANDED;
 static int32_t referenceMain;
 static int32_t referenceTail;
 static uint32_t prevTime;
-static int16_t mainOffset = 20;
+static int16_t offsetMain = 20;
 
 // Initialise controller
 void initController()
@@ -57,18 +57,19 @@ void updateController(uint32_t time)
         if (!referenceFound())
         {
             if (!foundThreshold)
-                foundThreshold = findThreshold(&mainOffset);
-            controlMain = mainOffset;
+                foundThreshold = findThreshold(&offsetMain);
+            controlMain = offsetMain;
             controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
             break;
         }
         else
         {
+            offsetMain *= SCALING_FACTOR;
             changeMode(FLYING);
         }
 
     case FLYING:
-        controlMain = updatePID(&pidMain, errorMain, deltaTime, mainOffset * SCALING_FACTOR);
+        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
         controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
         if (controlMain < MIN_FLYING_DUTY)
             controlMain = MIN_FLYING_DUTY;
@@ -86,7 +87,7 @@ void updateController(uint32_t time)
         }
         else // Continue running altitude controller until landed
         {
-            controlMain = updatePID(&pidMain, errorMain, deltaTime, MAIN_OFFSET);
+            controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
             if (controlMain < MIN_FLYING_DUTY)
                 controlMain = MIN_FLYING_DUTY;
