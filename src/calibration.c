@@ -48,7 +48,7 @@ bool findThreshold(int16_t* threshold)
     bool foundThreshold = false;
 
     // Find main offset
-    if (getAltitude() < 10) // TODO
+    if (getAltitude() < 5) // TODO
     {
         *threshold += 1;
     }
