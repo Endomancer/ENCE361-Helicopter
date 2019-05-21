@@ -8,6 +8,7 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "utils/ustdlib.h"
+#include "controller.h"
 #include "config.h"
 #include "rotors.h"
 #include "pwm.h"
@@ -64,21 +65,20 @@ void UARTSend(char *pucBuffer)
 //**********************************************************************
 // Transmit the helicopter altitude via UART0
 //**********************************************************************
-void UARTAltitude(int16_t altitude)
+void UARTAltitude(int16_t altitude, int32_t reference)
 {
-    char string[20]; // The string only needs 18 characters
-    usnprintf(string, sizeof(string), "Altitude  = %4d%%\n", altitude);
+    char string[26]; // The string only needs 18 characters
+    usnprintf(string, sizeof(string), "Altitude  = %4d [%d]\n", altitude, reference);
     UARTSend(string);
 }
 
 //**********************************************************************
 // Transmit the helicopter angle via UART0
 //**********************************************************************
-void UARTAngle(int16_t angle)
+void UARTAngle(int16_t angle, int32_t reference)
 {
-    char string[22]; // The string only 22 characters
-
-    usnprintf(string, sizeof(string), "Angle     = %4ddeg\n", angle);
+    char string[28]; // The string only 22 characters
+     usnprintf(string, sizeof(string), "Angle     = %4ddeg [%d]\n", angle, reference);
     UARTSend(string);
 }
 

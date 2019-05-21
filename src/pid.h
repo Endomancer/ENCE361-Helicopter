@@ -22,16 +22,16 @@ typedef struct
     int32_t i_error;    // Integral error
     int32_t d_error;    // Derivative error
     int32_t reference;  // Reference value
-} pid_t;
+} controller_t;
 
 // Initialise a PID controller instance
-void initPID(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
+void initPID(controller_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
 
 // Update the gains of a specified PID controller
 // Used for gain scheduling and experimentally finding gains
-void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
+void updateGains(controller_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd);
 
 // Update the controller output based on the current system error and gains
-uint16_t updatePID(pid_t *pid, int32_t error, uint32_t dT, int32_t offset);
+uint16_t updatePID(controller_t *pid, int32_t error, uint32_t dT, int32_t offset);
 
 #endif 

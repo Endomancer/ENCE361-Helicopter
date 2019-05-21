@@ -6,8 +6,8 @@
 #include "rotors.h"
 #include "calibration.h"
 
-static pid_t pidMain;
-static pid_t pidTail;
+static controller_t pidMain;
+static controller_t pidTail;
 static control_states_t state = LANDED;
 static int32_t referenceMain;
 static int32_t referenceTail;
@@ -178,4 +178,14 @@ void decreaseYaw()
 
         pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
     }
+}
+
+int32_t getAltitudeReference()
+{
+    return referenceMain;
+}
+
+int32_t getYawReference()
+{
+    return referenceTail;
 }

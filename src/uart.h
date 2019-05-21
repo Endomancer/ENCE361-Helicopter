@@ -16,12 +16,12 @@ void UARTSend(char *pucBuffer);
 //**********************************************************************
 // Transmit the helicopter altitude via UART0
 //**********************************************************************
-void UARTAltitude(int16_t altitude);
+void UARTAltitude(int16_t altitude, int32_t reference);
 
 //**********************************************************************
 // Transmit the helicopter angle via UART0
 //**********************************************************************
-void UARTAngle(int16_t angle);
+void UARTAngle(int16_t angle, int32_t reference);
 
 //**********************************************************************
 // Transmit the helicopters main rotor duty cycle via UART0
