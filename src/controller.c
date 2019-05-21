@@ -81,7 +81,7 @@ void updateController(uint32_t time)
         referenceTail = 0;
         referenceMain -= 5*PERCENT/MAX_HEIGHT;
         pidMain.reference -= 5; // TODO : Find appropriate landing speed
-        if (pidMain.reference <= 0)
+        if ((pidMain.reference <= 0) && (errorTail <= 5) && (errorTail >= -5))
         {
             changeMode(LANDED);
             controlMain = 0;
@@ -113,7 +113,7 @@ void changeMode(control_states_t newState)
     switch (state)
     {
     case SWEEPING:
-        updateGains(&pidTail, 1000, 10, 0);
+        updateGains(&pidTail, 600, 10, 0);
     case LANDED:
         pidMain.reference = 0;
         pidTail.reference = 0;
@@ -123,12 +123,12 @@ void changeMode(control_states_t newState)
 
     case FLYING:
         updateGains(&pidMain, 65, 14, 0);
-        updateGains(&pidTail, 600, 25, 0);
+        updateGains(&pidTail, 400, 25, 0);
         break;
 
     case LANDING:
         updateGains(&pidMain, 50, 5, 0);
-        updateGains(&pidTail, 800, 10, 0);
+        updateGains(&pidTail, 400, 10, 0);
         break;
     }
 }
