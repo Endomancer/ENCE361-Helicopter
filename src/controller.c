@@ -127,7 +127,7 @@ void changeMode(control_states_t newState)
         break;
 
     case LANDING:
-        updateGains(&pidMain, 50, 10, 0);
+        updateGains(&pidMain, 50, 5, 0);
         updateGains(&pidTail, 800, 10, 0);
         break;
     }
