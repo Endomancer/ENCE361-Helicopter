@@ -8,6 +8,7 @@
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
 #include "utils/ustdlib.h"
+#include "controller.h"
 #include "config.h"
 #include "rotors.h"
 #include "pwm.h"
@@ -67,7 +68,7 @@ void UARTSend(char *pucBuffer)
 void UARTAltitude(int16_t altitude, int32_t reference)
 {
     char string[26]; // The string only needs 18 characters
-    usnprintf(string, sizeof(string), "Altitude  = %4d [%d]\n", altitude, ((reference+1)*PERCENT/MAX_HEIGHT));
+    usnprintf(string, sizeof(string), "Altitude  = %4d [%d]\n", altitude, reference);
     UARTSend(string);
 }
 
@@ -77,17 +78,7 @@ void UARTAltitude(int16_t altitude, int32_t reference)
 void UARTAngle(int16_t angle, int32_t reference)
 {
     char string[28]; // The string only 22 characters
-    int32_t roundedReference;
-    if (reference >= 0)
-    {
-        roundedReference = reference + 1;
-    }
-    else
-    {
-        roundedReference = reference - 1;
-    }
-    
-    usnprintf(string, sizeof(string), "Angle     = %4ddeg [%d]\n", angle, (roundedReference*DEGREES/ROT_COUNT));
+     usnprintf(string, sizeof(string), "Angle     = %4ddeg [%d]\n", angle, reference);
     UARTSend(string);
 }
 

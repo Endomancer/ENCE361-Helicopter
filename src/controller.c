@@ -1,57 +1,191 @@
-//* PID controller for heli project
-
 #include "controller.h"
 #include "config.h"
+#include "adc.h"
+#include "quad.h"
+#include "pid.h"
+#include "rotors.h"
+#include "calibration.h"
 
-#define BUF_SIZE 3
-#define MAX_PWM 98
+static controller_t pidMain;
+static controller_t pidTail;
+static control_states_t state = LANDED;
+static int32_t referenceMain;
+static int32_t referenceTail;
+static uint32_t prevTime;
 
-// Initialise a PID controller instance
-void initController(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
+// Initialise controller
+void initController()
 {
-    pid->Kp = Kp;
-    pid->Ki = Ki;
-    pid->Kd = Kd;
-    pid->p_error = 0;
-    pid->i_error = 0;
-    pid->d_error = 0;
-    pid->reference = 0;
+    // Initialise PID controllers
+    initPID(&pidMain, 0, 0, 0);
+    initPID(&pidTail, 0, 0, 0);
+
+    // Default state is landed
+    changeMode(LANDED);
+
+    // Initialise globals
+    referenceMain = 0;
+    referenceTail = 0;
+    prevTime = 0;
 }
 
-// Update the gains of a specified PID controller
-// Used for gain scheduling and experimentally finding gains
-void updateGains(pid_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
+// Update controller
+void updateController(uint32_t time)
 {
-    pid->Kp = Kp;
-    pid->Ki = Ki;
-    pid->Kd = Kd;
+    uint16_t controlMain = 0;
+    uint16_t controlTail = 0;
+    // Calculate error
+    int32_t errorMain = pidMain.reference - getAltitude();
+    int32_t errorTail = getQuadDiff(pidTail.reference);
+    // Calculate change in time
+    uint32_t deltaTime = time - prevTime;
+    prevTime = time;
+    // Calculate offsets
+    int32_t offsetTail = getMainRotorDuty() * YAW_OFFSET_MULTIPLIER;
+
+    // Controller state machine
+    switch (state)
+    {
+    case LANDED:
+        controlMain = 0;
+        controlTail = 0;
+        break;
+
+    case SWEEPING: // TODO
+        if (!referenceFound())
+        {
+            controlMain = 10;
+            controlTail = 20;
+            break;
+        }
+        else
+        {
+            changeMode(FLYING);
+        }
+
+    case FLYING:
+        controlMain = updatePID(&pidMain, errorMain, deltaTime, MAIN_OFFSET);
+        controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
+        if (controlMain < MIN_FLYING_DUTY)
+            controlMain = MIN_FLYING_DUTY;
+        if (controlTail < MIN_FLYING_DUTY)
+            controlTail = MIN_FLYING_DUTY;
+        break;
+
+    case LANDING:
+        pidTail.reference = 0;
+        pidMain.reference -= 5; // TODO : Find appropriate landing speed
+        if (pidMain.reference <= 0)
+        {
+            changeMode(LANDED);
+            controlMain = 0;
+        }
+        else // Continue running altitude controller until landed
+        {
+            controlMain = updatePID(&pidMain, errorMain, deltaTime, MAIN_OFFSET);
+            controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
+            if (controlMain < MIN_FLYING_DUTY)
+                controlMain = MIN_FLYING_DUTY;
+            if (controlTail < MIN_FLYING_DUTY)
+                controlTail = MIN_FLYING_DUTY;
+        }
+        break;
+    }
+
+    // Update PWM outputs
+    setMainRotorSpeed(controlMain);
+    setTailRotorSpeed(controlTail);
 }
 
-// Update the controller output based on the current system error and gains 
-uint16_t controlUpdate(pid_t* pid, int32_t error, uint32_t dT, int32_t offset)
+// Change controller mode
+void changeMode(control_states_t newState)
 {
-    pid->p_error = error;
-    pid->i_error += pid->p_error * dT / CPU_CLOCK_SPEED;
-    pid->d_error = (pid->p_error - pid->d_error) * CPU_CLOCK_SPEED / dT;
+    state = newState;
 
-    if (pid->i_error > 500)
-        pid->i_error = 500;
-
-    int32_t control = pid->Kp * pid->p_error
-                    + pid->Ki * pid->i_error / SCALING_FACTOR
-                    + pid->Kd * pid->d_error / SCALING_FACTOR
-                    + offset;
-    
-    control /= SCALING_FACTOR;
-
-    if (control > MAX_PWM)
+    // TODO: Determine gains
+    switch (state)
     {
-        control = MAX_PWM;
+    case SWEEPING:
+        updateGains(&pidTail, 1000, 10, 0);
+    case LANDED:
+        pidMain.reference = 0;
+        pidTail.reference = 0;
+        break;
+
+    case FLYING:
+        updateGains(&pidMain, 60, 12, 0);
+        updateGains(&pidTail, 800, 5, 0);
+        break;
+
+    case LANDING:
+        updateGains(&pidMain, 50, 10, 0);
+        updateGains(&pidTail, 800, 10, 0);
+        break;
     }
-    else if (control < 2)
+}
+
+// Increase altitude by 10%
+// Only used while flying
+void increaseAltitude()
+{
+    if (state == FLYING)
     {
-        control = 2;
+        referenceMain += ALTITUDE_INCREMENT;
+        if (referenceMain > PERCENT)
+            referenceMain = PERCENT;
+
+        pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
     }
-    
-    return control;
+}
+
+// Decrease altitude by 10%
+// Only used while flying
+void decreaseAltitude()
+{
+    if (state == FLYING)
+    {
+        referenceMain -= ALTITUDE_INCREMENT;
+        if (referenceMain < 0)
+            referenceMain = 0;
+
+        pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
+    }
+}
+
+// Increase yaw by 15 degrees (clockwise)
+// Only used while flying
+void increaseYaw()
+{
+    if (state == FLYING)
+    {
+        referenceTail += YAW_INCREMENT;
+        if (referenceTail > DEGREES / 2)
+            referenceTail -= DEGREES;
+
+        pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
+    }
+}
+
+// Decrease yaw by 15 degrees (counterclockwise)
+// Only used while flying
+void decreaseYaw()
+{
+    if (state == FLYING)
+    {
+        referenceTail -= YAW_INCREMENT;
+        if (referenceTail < -DEGREES / 2)
+            referenceTail += DEGREES;
+
+        pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
+    }
+}
+
+int32_t getAltitudeReference()
+{
+    return referenceMain;
+}
+
+int32_t getYawReference()
+{
+    return referenceTail;
 }
