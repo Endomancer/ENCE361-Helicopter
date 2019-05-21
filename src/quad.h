@@ -34,6 +34,9 @@ int16_t getQuad();
 // A current pos counter-clockwise from the reference returns a negative value
 int16_t getQuadDiff(int16_t reference);
 
+// Wrap position between -(range / 2) and (range / 2 - 1)
+int16_t wrap(int16_t position, uint16_t range);
+
 // Update the position counter when an interrupt occurs
 // Rotating clockwise increments the position
 // Rotating counterclockwise decrements the position

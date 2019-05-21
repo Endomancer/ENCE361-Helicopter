@@ -65,6 +65,16 @@ int16_t getQuadDiff(int16_t reference)
     return diff;
 }
 
+// Wrap position between -(range / 2) and (range / 2 - 1)
+int16_t wrap(int16_t position, uint16_t range)
+{
+    position = position % range;
+    if (position >= range / 2)
+        position -= range;
+    
+    return position;
+}
+
 void QuadIntHandler()
 {
     static uint16_t value = 0;
