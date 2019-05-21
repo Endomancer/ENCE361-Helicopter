@@ -79,12 +79,13 @@ void updateController(uint32_t time)
     case LANDING:
         pidTail.reference = 0;
         referenceTail = 0;
-        referenceMain -= 5;
+        referenceMain -= 5*PERCENT/MAX_HEIGHT;
         pidMain.reference -= 5; // TODO : Find appropriate landing speed
         if (pidMain.reference <= 0)
         {
             changeMode(LANDED);
             controlMain = 0;
+            referenceMain = 0;
         }
         else // Continue running altitude controller until landed
         {
