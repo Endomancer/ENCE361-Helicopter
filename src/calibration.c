@@ -45,14 +45,20 @@ bool atReference()
 
 bool findThreshold(int16_t* threshold)
 {
-    bool found = false;
+    bool foundThreshold = false;
 
-    if (getAltitude() <= 10)
+    // Find main offset
+    if (getAltitude() < 10) // TODO
     {
-        *threshold++;
-        found = true;
+        *threshold += 1;
     }
-    return found;
+    else
+    {
+        *threshold -= 1;
+        foundThreshold = true;
+    }
+    
+    return foundThreshold;
 }
 
 void RefIntHandler()
