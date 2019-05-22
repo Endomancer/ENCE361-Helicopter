@@ -75,11 +75,17 @@ void updateController(uint32_t time)
             rampTail(5);
             break;
         }
+        else if (!foundThreshold)
+        {
+            foundThreshold = findThreshold(&offsetMain);
+            controlMain = offsetMain;
+            controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
+        }
         else
         {
             offsetMain *= SCALING_FACTOR;
             changeMode(FLYING);
-            initPID(&pidTail, 800, 25, 0);
+            initPID(&pidTail, 500, 2, 0);
             pidTail.reference = getQuad();
         }
 
