@@ -57,8 +57,15 @@ void updateController(uint32_t time)
         if (!referenceFound())
         {
             if (!foundThreshold)
+            {
                 foundThreshold = findThreshold(&mainOffset);
-            controlMain = mainOffset;
+                controlMain = mainOffset;
+            }
+            else
+            {
+                controlMain = updatePID(&pidMain, errorMain, deltaTime, mainOffset * SCALING_FACTOR);
+            }
+            
             controlTail = updatePID(&pidTail, 15, deltaTime, offsetTail);
             break;
         }
@@ -122,7 +129,7 @@ void changeMode(control_states_t newState)
         break;
 
     case FLYING:
-        updateGains(&pidMain, 65, 14, 0);
+        updateGains(&pidMain, 70, 20, 0);
         updateGains(&pidTail, 400, 25, 0);
         break;
 
