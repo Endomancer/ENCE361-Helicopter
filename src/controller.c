@@ -130,19 +130,19 @@ void changeMode(control_states_t newState)
         break;
     
     case SWEEPING:
-        updateGains(&pidTail, 1000, 10, 0);
+        updateGains(&pidTail, 400, 0, 0);
         break;
 
     case FLYING:
-        updateGains(&pidMain, 65, 14, 0);
-        updateGains(&pidTail, 800, 25, 0);
+        updateGains(&pidMain, 65, 2, 0);
+        updateGains(&pidTail, 500, 2, 0);
         referenceMain = 0;
         referenceTail = 0;
         break;
 
     case LANDING:
-        updateGains(&pidMain, 50, 10, 0);
-        updateGains(&pidTail, 800, 10, 0);
+        updateGains(&pidMain, 50, 2, 0);
+        updateGains(&pidTail, 500, 2, 0);
         referenceMain = 0;
         referenceTail = 0;
         break;
