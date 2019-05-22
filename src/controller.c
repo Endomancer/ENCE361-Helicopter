@@ -8,7 +8,7 @@
 
 static controller_t pidMain;
 static controller_t pidTail;
-static control_states_t state = LANDING;
+static control_states_t state = LANDED;
 static int32_t referenceMain;
 static int32_t referenceTail;
 static uint32_t prevTime;
