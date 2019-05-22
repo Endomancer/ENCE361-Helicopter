@@ -115,6 +115,10 @@ void updateController(uint32_t time)
         }
         else // Continue running controllers until landed
         {
+            if (pidMain.reference == 0 && pidTail.reference == 0)
+            {
+                updateGains(&pidTail, 500, 4, 0);
+            }
             // Update controllers
             controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
@@ -160,7 +164,7 @@ void changeMode(control_states_t newState)
         break;
 
     case LANDING:
-        updateGains(&pidMain, 50, 2, 0);
+        updateGains(&pidMain, 50, 4, 0);
         updateGains(&pidTail, 500, 2, 0);
         referenceMain = 0;
         referenceTail = 0;
