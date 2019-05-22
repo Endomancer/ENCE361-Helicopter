@@ -70,9 +70,7 @@ void updateController(uint32_t time)
             {
                 controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain * SCALING_FACTOR);
             }
-            controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
-            referenceTail = wrap(referenceTail + 5, DEGREES);
-            rampTail(5);
+            controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
             break;
         }
         else if (!foundThreshold)
