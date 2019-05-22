@@ -77,12 +77,12 @@ void vButtonsTask(void *pvParameters)
             {
                 changeMode(LANDING); // Land helicopter
             }
-            else if ((state == LANDED) && isLanding)
+        }
+        else if ((state == LANDED) && isLanding)
             {
                 isLanding = false;
                 changeMode(FLYING);
             }
-        }
         else if (checkButton(LEFT) == PUSHED)
         {
             decreaseYaw(); // Rotate 15 degrees counterclockwise
