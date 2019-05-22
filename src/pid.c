@@ -35,7 +35,7 @@ uint16_t updatePID(controller_t* pid, int32_t error, uint32_t dT, int32_t offset
     pid->d_error = (error - pid->p_error) * configTICK_RATE_HZ / dT;
     pid->p_error = error;
     pid->i_error += pid->p_error * dT / configTICK_RATE_HZ;
-    pid->i_error = clamp(pid->i_error, -500, 500);
+    pid->i_error = clamp(pid->i_error, -5000, 5000);
     
     int32_t control = pid->Kp * pid->p_error
                     + pid->Ki * pid->i_error / SCALING_FACTOR

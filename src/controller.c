@@ -60,9 +60,16 @@ void updateController(uint32_t time)
     case SWEEPING: // TODO
         if (!referenceFound())
         {
+                    
             if (!foundThreshold)
+            {
                 foundThreshold = findThreshold(&offsetMain);
-            controlMain = offsetMain;
+                controlMain = offsetMain;
+            }
+            else
+            {
+                controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain * SCALING_FACTOR);
+            }
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
             referenceTail = wrap(referenceTail + 5, DEGREES);
             rampTail(5);
@@ -77,7 +84,7 @@ void updateController(uint32_t time)
         }
 
     case FLYING:
-        rampMain(3);
+        rampMain(1);
         rampTail(3);
         // Update controllers
         controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
@@ -134,7 +141,7 @@ void changeMode(control_states_t newState)
         break;
 
     case FLYING:
-        updateGains(&pidMain, 65, 2, 0);
+        updateGains(&pidMain, 65, 10, 0);
         updateGains(&pidTail, 500, 2, 0);
         referenceMain = 0;
         referenceTail = 0;
