@@ -63,7 +63,9 @@ void updateController(uint32_t time)
             if (!foundThreshold)
                 foundThreshold = findThreshold(&offsetMain);
             controlMain = offsetMain;
-            controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
+            controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
+            referenceTail = wrap(referenceTail + 5, DEGREES);
+            rampTail(5);
             break;
         }
         else
@@ -85,9 +87,9 @@ void updateController(uint32_t time)
 
     case LANDING:
         rampMain(2); // TODO : Find appropriate landing speed
-        rampTail(2);
+        rampTail(5);
 
-        if (pidMain.reference == 0)
+        if (pidMain.reference == 0 && getQuadAngle() == 0)
         {
             changeMode(LANDED);
             controlMain = 0;
@@ -133,6 +135,8 @@ void changeMode(control_states_t newState)
         initPID(&pidTail, 800, 25, 0);
         pidMain.reference = 0;
         pidTail.reference = getQuad();
+        referenceMain = 0;
+        referenceTail = 0;
         break;
 
     case LANDING:
