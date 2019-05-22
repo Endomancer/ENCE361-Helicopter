@@ -70,16 +70,14 @@ void updateController(uint32_t time)
             {
                 controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain * SCALING_FACTOR);
             }
-            controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
-            referenceTail = wrap(referenceTail + 5, DEGREES);
-            rampTail(5);
+            controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
             break;
         }
         else
         {
             offsetMain *= SCALING_FACTOR;
             changeMode(FLYING);
-            initPID(&pidTail, 800, 25, 0);
+            initPID(&pidTail, 500, 2, 0);
             pidTail.reference = getQuad();
         }
 
