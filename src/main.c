@@ -9,11 +9,13 @@
 #include "uart.h"
 #include "calibration.h"
 #include "controller.h"
+#include "reset.h"
 
 // Initialise peripherals
 void init()
 {
     initClock();
+    initSoftReset();
     initADC();
     initButtons();
     initDisplay();
