@@ -108,6 +108,7 @@ void updateController(uint32_t time)
 
         if (pidMain.reference == 0 && errorTail <= 5 && errorTail > -5)
         {
+            state = LANDED; // Overide landing lockout
             changeMode(LANDED);
             controlMain = 0;
             referenceMain = 0;
@@ -132,7 +133,10 @@ void updateController(uint32_t time)
 // Change controller mode
 void changeMode(control_states_t newState)
 {
-    state = newState;
+    // Do not change state while landing
+    // The state must be changed manually to "unlock" from landing mode
+    if (state != LANDING)
+        state = newState;
 
     // TODO: Determine gains
     switch (state)
@@ -245,9 +249,4 @@ void rampTail(uint16_t increment)
     
     // Ensure reference is within valid range
     pidTail.reference = wrap(pidTail.reference, ROT_COUNT);
-}
-
-control_states_t getState()
-{
-    return(state);
 }
