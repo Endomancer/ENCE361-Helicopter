@@ -60,7 +60,6 @@ void updateController(uint32_t time)
     case SWEEPING: // TODO
         if (!referenceFound())
         {
-                    
             if (!foundThreshold)
             {
                 foundThreshold = findThreshold(&offsetMain);
@@ -71,6 +70,8 @@ void updateController(uint32_t time)
                 controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain * SCALING_FACTOR);
             }
             controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
+            controlMain = clamp(controlMain, MIN_FLYING_DUTY, 50);
+            controlTail = clamp(controlTail, MIN_FLYING_DUTY, 50);
             break;
         }
         else if (!foundThreshold)
@@ -78,6 +79,9 @@ void updateController(uint32_t time)
             foundThreshold = findThreshold(&offsetMain);
             controlMain = offsetMain;
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
+            controlMain = clamp(controlMain, MIN_FLYING_DUTY, 50);
+            controlTail = clamp(controlTail, MIN_FLYING_DUTY, PERCENT);
+            break;
         }
         else
         {
