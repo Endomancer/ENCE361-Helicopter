@@ -2,6 +2,7 @@
 
 #include "pid.h"
 #include "config.h"
+#include "FreeRTOS.h"
 
 #define BUF_SIZE 3
 #define MAX_PWM 98
@@ -31,11 +32,11 @@ void updateGains(controller_t* pid, uint16_t Kp, uint16_t Ki, uint16_t Kd)
 // Update the controller output based on the current system error and gains 
 uint16_t updatePID(controller_t* pid, int32_t error, uint32_t dT, int32_t offset)
 {
-    pid->d_error = (error - pid->p_error) * CPU_CLOCK_SPEED / dT;
+    pid->d_error = (error - pid->p_error) * configTICK_RATE_HZ / dT;
     pid->p_error = error;
-    pid->i_error += pid->p_error * dT / CPU_CLOCK_SPEED;
+    pid->i_error += pid->p_error * dT / configTICK_RATE_HZ;
     pid->i_error = clamp(pid->i_error, -500, 500);
-
+    
     int32_t control = pid->Kp * pid->p_error
                     + pid->Ki * pid->i_error / SCALING_FACTOR
                     + pid->Kd * pid->d_error / SCALING_FACTOR
