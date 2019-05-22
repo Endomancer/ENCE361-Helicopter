@@ -91,10 +91,11 @@ void updateController(uint32_t time)
         rampMain(2); // TODO : Find appropriate landing speed
         rampTail(5);
 
-        if (pidMain.reference == 0 && getQuadAngle() == 0)
+        if (pidMain.reference == 0 && errorTail <= 5 && errorTail > -5)
         {
             changeMode(LANDED);
             controlMain = 0;
+            referenceMain = 0;
         }
         else // Continue running controllers until landed
         {
