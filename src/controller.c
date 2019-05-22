@@ -8,7 +8,7 @@
 
 static controller_t pidMain;
 static controller_t pidTail;
-static control_states_t state = LANDED;
+static control_states_t state = LANDING;
 static int32_t referenceMain;
 static int32_t referenceTail;
 static uint32_t prevTime;
@@ -241,4 +241,9 @@ void rampTail(uint16_t increment)
     
     // Ensure reference is within valid range
     pidTail.reference = wrap(pidTail.reference, ROT_COUNT);
+}
+
+control_states_t getState()
+{
+    return(state);
 }
