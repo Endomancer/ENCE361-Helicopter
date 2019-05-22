@@ -29,10 +29,10 @@ void increaseYaw();
 // Only used while flying
 void decreaseYaw();
 
+// Return the reference height as a percentage
 int32_t getAltitudeReference();
 
+// Return the reference angle in degrees
 int32_t getYawReference();
-
-control_states_t getState();
 
 #endif
