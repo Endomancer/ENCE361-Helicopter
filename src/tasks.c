@@ -47,18 +47,24 @@ void vADCTask(void *pvParameters)
 
 void vButtonsTask(void *pvParameters)
 {
+    bool isLanding = false;
     while (1)
     {
         // Poll buttons
         updateButtons();
 
         uint8_t switch_state = checkButton(SWITCH);
+        control_states_t state = getState();
 
         if (switch_state)
         {
             if (switch_state == PUSHED)
             {
-                if (referenceFound())
+                if (state == LANDING)
+                {
+                    isLanding = true;
+                }
+                else if (referenceFound())
                 {
                     changeMode(FLYING); // Start flying!
                 }
@@ -70,6 +76,11 @@ void vButtonsTask(void *pvParameters)
             else if (switch_state == RELEASED)
             {
                 changeMode(LANDING); // Land helicopter
+            }
+            else if ((state == LANDED) && isLanding)
+            {
+                isLanding = false;
+                changeMode(FLYING);
             }
         }
         else if (checkButton(LEFT) == PUSHED)

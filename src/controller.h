@@ -33,4 +33,6 @@ int32_t getAltitudeReference();
 
 int32_t getYawReference();
 
+control_states_t getState();
+
 #endif
