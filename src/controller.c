@@ -26,7 +26,7 @@ void initController()
     initPID(&pidTail, 0, 0, 0);
 
     // Default state is landed
-    changeMode(LANDED);
+    changeMode(LANDING);
 
     // Initialise globals
     referenceMain = 0;
