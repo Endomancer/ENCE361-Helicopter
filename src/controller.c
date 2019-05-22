@@ -95,7 +95,7 @@ void updateController(uint32_t time)
         rampMain(1);
         rampTail(3);
         // Update controllers
-        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
+        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain + getAltitude());
         controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
         // Clamp duty cycle values
         controlMain = clamp(controlMain, MIN_FLYING_DUTY, PERCENT);
@@ -103,7 +103,7 @@ void updateController(uint32_t time)
         break;
 
     case LANDING:
-        rampMain(2); // TODO : Find appropriate landing speed
+        rampMain(1); // TODO : Find appropriate landing speed
         rampTail(5);
 
         if (pidMain.reference == 0 && errorTail <= 5 && errorTail > -5)
