@@ -72,6 +72,8 @@ void updateController(uint32_t time)
         {
             offsetMain *= SCALING_FACTOR;
             changeMode(FLYING);
+            initPID(&pidTail, 800, 25, 0);
+            pidTail.reference = getQuad();
         }
 
     case FLYING:
@@ -120,10 +122,10 @@ void changeMode(control_states_t newState)
     switch (state)
     {
     case LANDED:
-        referenceMain = 0;
-        referenceTail = 0;
         pidMain.reference = 0;
         pidTail.reference = 0;
+        referenceMain = 0;
+        referenceTail = 0;
         break;
     
     case SWEEPING:
@@ -132,9 +134,7 @@ void changeMode(control_states_t newState)
 
     case FLYING:
         updateGains(&pidMain, 65, 14, 0);
-        initPID(&pidTail, 800, 25, 0);
-        pidMain.reference = 0;
-        pidTail.reference = getQuad();
+        updateGains(&pidTail, 800, 25, 0);
         referenceMain = 0;
         referenceTail = 0;
         break;
@@ -156,8 +156,6 @@ void increaseAltitude()
     {
         referenceMain += ALTITUDE_INCREMENT;
         referenceMain = clamp(referenceMain, 0, PERCENT);
-
-        //pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
     }
 }
 
@@ -169,8 +167,6 @@ void decreaseAltitude()
     {
         referenceMain -= ALTITUDE_INCREMENT;
         referenceMain = clamp(referenceMain, 0, PERCENT);
-
-        //pidMain.reference = MAX_HEIGHT * referenceMain / PERCENT;
     }
 }
 
@@ -182,8 +178,6 @@ void increaseYaw()
     {
         referenceTail += YAW_INCREMENT;
         referenceTail = wrap(referenceTail, DEGREES);
-
-        //pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
     }
 }
 
@@ -195,8 +189,6 @@ void decreaseYaw()
     {
         referenceTail -= YAW_INCREMENT;
         referenceTail = wrap(referenceTail, DEGREES);
-
-        //pidTail.reference = ROT_COUNT * referenceTail / DEGREES;
     }
 }
 
