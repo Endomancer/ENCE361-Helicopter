@@ -87,6 +87,13 @@ void initButtons(void)
         but_count[i] = 0;
         but_flag[i] = false;
     }
+
+    // Initialise buttons to their current state to avoid false presses at startup
+    but_state[UP] = (GPIOPinRead(UP_BUT_PORT_BASE, UP_BUT_PIN) == UP_BUT_PIN);
+    but_state[DOWN] = (GPIOPinRead(DOWN_BUT_PORT_BASE, DOWN_BUT_PIN) == DOWN_BUT_PIN);
+    but_state[LEFT] = (GPIOPinRead(LEFT_BUT_PORT_BASE, LEFT_BUT_PIN) == LEFT_BUT_PIN);
+    but_state[RIGHT] = (GPIOPinRead(RIGHT_BUT_PORT_BASE, RIGHT_BUT_PIN) == RIGHT_BUT_PIN);
+    but_state[SWITCH] = (GPIOPinRead(SWITCH_PORT_BASE, SWITCH_PIN) == SWITCH_PIN);
 }
 
 // *******************************************************
