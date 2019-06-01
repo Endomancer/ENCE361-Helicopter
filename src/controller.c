@@ -104,7 +104,7 @@ void updateController(uint32_t time)
         rampMain(1);
         rampTail(3);
         // Update controllers
-        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain + currentAltitude;
+        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain + currentAltitude);
         controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
         // Clamp duty cycle values
         controlMain = clamp(controlMain, MIN_FLYING_DUTY, PERCENT);
