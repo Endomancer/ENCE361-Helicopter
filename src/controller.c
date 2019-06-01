@@ -38,10 +38,11 @@ void initController()
 void updateController(uint32_t time)
 {
     static bool foundThreshold = false;
+    uint32_t currentAltitude = getAltitude();
     uint16_t controlMain = 0;
     uint16_t controlTail = 0;
     // Calculate error
-    int32_t errorMain = pidMain.reference - getAltitude();
+    int32_t errorMain = pidMain.reference - currentAltitude;
     int32_t errorTail = getQuadDiff(pidTail.reference);
     // Calculate change in time
     uint32_t deltaTime = time - prevTime;
@@ -58,8 +59,10 @@ void updateController(uint32_t time)
         break;
 
     case SWEEPING: // TODO
+        // Check if the reference point has been found
         if (!referenceFound())
         {
+            // Check if the main offset has been found
             if (!foundThreshold)
             {
                 foundThreshold = findThreshold(&offsetMain);
@@ -69,20 +72,26 @@ void updateController(uint32_t time)
             {
                 controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain * SCALING_FACTOR);
             }
+            // Update controllers
             controlTail = updatePID(&pidTail, 20, deltaTime, offsetTail);
+            // Clamp duty cycle values
             controlMain = clamp(controlMain, MIN_FLYING_DUTY, 50);
             controlTail = clamp(controlTail, MIN_FLYING_DUTY, 50);
             break;
         }
+        // if the main offset hasn't been found
         else if (!foundThreshold)
         {
             foundThreshold = findThreshold(&offsetMain);
             controlMain = offsetMain;
+            // Update controllers
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
+            // Clamp duty cycle values
             controlMain = clamp(controlMain, MIN_FLYING_DUTY, 50);
             controlTail = clamp(controlTail, MIN_FLYING_DUTY, PERCENT);
             break;
         }
+        // change state fo flying
         else
         {
             offsetMain *= SCALING_FACTOR;
@@ -95,7 +104,7 @@ void updateController(uint32_t time)
         rampMain(1);
         rampTail(3);
         // Update controllers
-        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain + getAltitude());
+        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain + currentAltitude);
         controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
         // Clamp duty cycle values
         controlMain = clamp(controlMain, MIN_FLYING_DUTY, PERCENT);
@@ -142,10 +151,11 @@ void changeMode(control_states_t newState)
     if (state != LANDING)
         state = newState;
 
-    // TODO: Determine gains
+    // Gain Scheduler
     switch (state)
     {
     case LANDED:
+        // Reset references
         pidMain.reference = 0;
         pidTail.reference = 0;
         referenceMain = 0;
@@ -153,10 +163,12 @@ void changeMode(control_states_t newState)
         break;
     
     case SWEEPING:
+        // Change the gains for sweeping
         updateGains(&pidTail, 400, 0, 0);
         break;
 
     case FLYING:
+        // Change the gains for flying
         updateGains(&pidMain, 65, 10, 0);
         updateGains(&pidTail, 500, 2, 0);
         referenceMain = 0;
@@ -164,6 +176,7 @@ void changeMode(control_states_t newState)
         break;
 
     case LANDING:
+        // Update gains for landing
         updateGains(&pidMain, 50, 4, 0);
         updateGains(&pidTail, 500, 2, 0);
         referenceMain = 0;
