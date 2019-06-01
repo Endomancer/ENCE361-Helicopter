@@ -1,9 +1,9 @@
 include(FetchContent)
 
 FetchContent_Declare(
-  OrbitOled
-  GIT_REPOSITORY https://eng-git.canterbury.ac.nz/nro55/OrbitOled.git
-  GIT_TAG        master
+  OrbitOLED
+  GIT_REPOSITORY https://eng-git.canterbury.ac.nz/nro55/tiva-libraries
+  GIT_TAG        OrbitOLED
 )
 
-FetchContent_MakeAvailable(OrbitOled)
+FetchContent_MakeAvailable(OrbitOLED)
