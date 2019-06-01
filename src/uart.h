@@ -22,12 +22,12 @@ void UARTAngle(int16_t angle, int32_t reference);
 //**********************************************************************
 // Transmit the helicopters main rotor duty cycle via UART0
 //**********************************************************************
-void UARTMainPWM();
+void UARTMainPWM(uint16_t duty);
 
 //**********************************************************************
 // Transmit the helicopters tail rotor duty cycle via UART0
 //**********************************************************************
-void UARTTailPWM();
+void UARTTailPWM(uint16_t duty);
 
 //**********************************************************************
 // Transmit a calibrating message via UART0

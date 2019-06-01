@@ -8,6 +8,7 @@
 #include "controller.h"
 #include "display.h"
 #include "quad.h"
+#include "rotors.h"
 #include "uart.h"
 
 typedef enum
@@ -251,8 +252,8 @@ void vUARTTask(void *pvParameters)
 
             UARTAltitude(getHeight(), getAltitudeReference());
             UARTAngle(getQuadAngle(), getYawReference());
-            UARTTailPWM();
-            UARTMainPWM();
+            UARTMainPWM(getMainRotorDuty());
+            UARTTailPWM(getTailRotorDuty());
             break;
         case CALIBRATING:
             UARTCalibrating(calibrating, initial);

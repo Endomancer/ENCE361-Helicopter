@@ -6,7 +6,6 @@
 #include "driverlib/sysctl.h"
 #include "inc/hw_memmap.h"
 #include "utils/uartstdio.h"
-#include "rotors.h"
 
 // USB Serial comms: UART0, Rx:PA0, Tx:PA1
 #define BAUD_RATE 9600
@@ -54,17 +53,17 @@ void UARTAngle(int16_t angle, int32_t reference)
 //**********************************************************************
 // Transmit the helicopters main rotor duty cycle via UART0
 //**********************************************************************
-void UARTMainPWM()
+void UARTMainPWM(uint16_t duty)
 {
-    UARTprintf("Main Duty = %4d%%\n", getMainRotorDuty());
+    UARTprintf("Main Duty = %4d%%\n", duty);
 }
 
 //**********************************************************************
 // Transmit the helicopters tail rotor duty cycle via UART0
 //**********************************************************************
-void UARTTailPWM()
+void UARTTailPWM(uint16_t duty)
 {
-    UARTprintf("Tail Duty = %4d%%\n", getTailRotorDuty());
+    UARTprintf("Tail Duty = %4d%%\n", duty);
 }
 
 //**********************************************************************
