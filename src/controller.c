@@ -124,6 +124,10 @@ void updateController(uint32_t time)
         }
         else // Continue running controllers until landed
         {
+            if (pidMain.reference == 0 && pidTail.reference == 0)
+            {
+                updateGains(&pidTail, 500, 4, 0);
+            }
             // Update controllers
             controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
             controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);

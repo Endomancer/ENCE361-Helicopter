@@ -1,8 +1,15 @@
 #include "adc.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
+#include "driverlib/adc.h"
 #include "driverlib/sysctl.h"
+#include "circBufT.h"
 #include "config.h"
+
+#define ADC_BASE ADC0_BASE
+#define ADC_SEQUENCE 3
+#define ADC_STEP 0
+#define ADC_CHANNEL ADC_CTL_CH9
 
 //*****************************************************************************
 // Global variables
@@ -60,6 +67,12 @@ void initADC(void)
 
     // Enable interrupts for ADC0 sequence 3 (clears any outstanding interrupts)
     ADCIntEnable(ADC_BASE, ADC_SEQUENCE);
+}
+
+// Trigger ADC sampling process
+void triggerADC()
+{
+    ADCProcessorTrigger(ADC_BASE, ADC_SEQUENCE);
 }
 
 // Return the average value in the circular buffer

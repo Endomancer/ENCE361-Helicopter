@@ -1,9 +1,9 @@
 include(FetchContent)
 
 FetchContent_Declare(
-  TivaWare
+  OrbitOLED
   GIT_REPOSITORY https://eng-git.canterbury.ac.nz/nro55/tiva-libraries
-  GIT_TAG        TivaWare
+  GIT_TAG        OrbitOLED
 )
 
-FetchContent_MakeAvailable(TivaWare)
+FetchContent_MakeAvailable(OrbitOLED)

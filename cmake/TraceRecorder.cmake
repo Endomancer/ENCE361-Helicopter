@@ -1,9 +1,9 @@
 include(FetchContent)
 
 FetchContent_Declare(
-  TivaWare
+  TraceRecorder
   GIT_REPOSITORY https://eng-git.canterbury.ac.nz/nro55/tiva-libraries
-  GIT_TAG        TivaWare
+  GIT_TAG        TraceRecorder
 )
 
-FetchContent_MakeAvailable(TivaWare)
+FetchContent_MakeAvailable(TraceRecorder)

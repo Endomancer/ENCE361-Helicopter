@@ -1,51 +1,50 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include "inc/hw_memmap.h" // Contains ADC defines
+/**********************************************************
+ * This file provides easy access to commonly used values *
+ **********************************************************/
 
+// Common constants
 #define MILLISECONDS 1000
 #define PERCENT 100
+#define DEGREES 360
 
-#define ADC_BASE ADC0_BASE
-#define ADC_SEQUENCE 3
-#define ADC_STEP 0
-#define ADC_CHANNEL ADC_CTL_CH9
-
+// ADC
 #define ADC_SAMPLE_RATE_HZ 100
-#define ADC_SAMPLE_RATE_MS (MILLISECONDS / ADC_SAMPLE_RATE_HZ)
 #define ADC_RANGE 4096
 #define MAX_HEIGHT (ADC_RANGE * 8 / 33) // Corresponds to 0.8 V
 
-#define DEGREES 360
+// Quadrature Decoder
 #define SLOT_COUNT 112 // Number of slots in disk
 #define ROT_COUNT (SLOT_COUNT * 4) // State changes per rotation
 
-#define UART_REFRESH_RATE_MS 100
-
-#define BUTTON_POLL_RATE_MS 10
-
-#define DISPLAY_REFRESH_RATE_MS 10
-
+// Calibration
 #define CALIBRATION_SAMPLES 4
-#define CALIBRATION_SAMPLE_RATE_MS 300
 #define CALIBRATING_DOT_RATE_MS 300
 #define CALIBRATING_NUM_DOTS 5
 
+// PWM
 #define PWM_FREQUENCY 200       // Frequency of main and tail PWM modules
 #define ROTOR_DUTY_LIMIT 90     // Maximum allowable duty cycle
 
-#define CONTROLLER_UPDATE_RATE_MS 100
-#define CPU_CLOCK_SPEED 20000000
-
-#define ALTITUDE_INCREMENT 10
-#define YAW_INCREMENT 15
-#define MIN_FLYING_DUTY 2
-
-#define HEIGHT_OF_OFFSET 2
-#define MAIN_REDUCTION 12
-
-#define SCALING_FACTOR 1000
-// #define MAIN_OFFSET (40 * SCALING_FACTOR)
+// Controller
+#define MIN_FLYING_DUTY 2       // Minimum duty cycle while flying
+#define SCALING_FACTOR 1000     // Used for integer arithmetic
+#define ALTITUDE_INCREMENT 10   // Adjust altitude by 10%
+#define YAW_INCREMENT 15        // Adjust angle by 15 degrees
 #define YAW_OFFSET_MULTIPLIER (SCALING_FACTOR * 9 / 10)
+
+// Calibration
+#define HEIGHT_THRESHOLD 2
+#define HEIGHT_REDUCTION 12
+
+// Task Update Rates
+#define ADC_SAMPLE_RATE_MS (MILLISECONDS / ADC_SAMPLE_RATE_HZ)
+#define BUTTON_POLL_RATE_MS 10
+#define CALIBRATION_SAMPLE_RATE_MS 300
+#define CONTROLLER_UPDATE_RATE_MS 100
+#define DISPLAY_REFRESH_RATE_MS 100
+#define UART_REFRESH_RATE_MS 250
 
 #endif

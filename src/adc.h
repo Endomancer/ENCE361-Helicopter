@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "circBufT.h"
-#include "driverlib/adc.h"
 
 extern uint32_t calibrationReference;
 
@@ -16,6 +14,9 @@ void ADCIntHandler(void);
 
 // Initialise the ADC
 void initADC(void);
+
+// Trigger ADC sampling process
+void triggerADC(void);
 
 // Return the average value in the circular buffer
 uint32_t averageADCVal(void);
