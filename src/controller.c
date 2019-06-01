@@ -173,7 +173,7 @@ void changeMode(control_states_t newState)
 
     case LANDING:
         // Update gains for landing
-        updateGains(&pidMain, 50, 2, 0);
+        updateGains(&pidMain, 50, 4, 0);
         updateGains(&pidTail, 500, 2, 0);
         referenceMain = 0;
         referenceTail = 0;
