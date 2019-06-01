@@ -25,8 +25,10 @@ void displayMeanVal(int16_t meanVal);
 // Displays loading bar while calibrating
 void displayCalibrating(bool calibrating);
 
+// Display the Tail PWM duty cycle
 void displayTailPWM();
 
+// Display the Main PWM duty cycle
 void displayMainPWM();
 
 #endif

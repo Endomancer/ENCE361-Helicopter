@@ -80,6 +80,7 @@ void displayCalibrating(bool calibrating)
     }
 }
 
+// Display the Tail PWM duty cycle
 void displayTailPWM()
 {
     char string[17]; // Display is 16 characters wide
@@ -88,6 +89,7 @@ void displayTailPWM()
     OLEDStringDraw(string, 0, 3); // Update line on display
 }
 
+// Display the Main PWM duty cycle
 void displayMainPWM()
 {
 char string[17]; // Display is 16 characters wide
