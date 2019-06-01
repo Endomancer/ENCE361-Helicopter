@@ -59,13 +59,14 @@ uint32_t readCircBuf(circBuf_t *buffer)
 uint32_t averageCircBuf(circBuf_t *buffer)
 {
     uint32_t sum = 0;
-
+	uint32_t currentReadIndex = buffer->rindex;
+	buffer->rindex = 0;
     // Accumulate samples
     for (uint8_t i = 0; i < buffer->size; i++)
     {
-        sum += readCircBuf(&circBuffer + i*sizeof(buffer));
+        sum += readCircBuf(buffer);
     }
-
+	buffer->rindex = currentReadIndex;
     // Calculate mean and round value
     return (2 * sum + buffer->size) / 2 / buffer->size;
 }
