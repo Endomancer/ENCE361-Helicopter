@@ -57,7 +57,7 @@ bool findThreshold(int16_t* threshold)
     bool foundThreshold = false;
 
     // Find main offset
-    if (getHeight() < HEIGHT_OF_OFFSET) 
+    if (getHeight() < HEIGHT_THRESHOLD) 
     {
         // Increase the threshold 
         *threshold += 1;
@@ -65,7 +65,7 @@ bool findThreshold(int16_t* threshold)
     else
     {
         // set the flag to true, decrease the threshold
-        *threshold -= MAIN_REDUCTION;
+        *threshold -= HEIGHT_REDUCTION;
         foundThreshold = true;
     }
     
