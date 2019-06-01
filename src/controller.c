@@ -42,7 +42,7 @@ void updateController(uint32_t time)
     uint16_t controlMain = 0;
     uint16_t controlTail = 0;
     // Calculate error
-    int32_t errorMain = pidMain.reference - currentAltitude();
+    int32_t errorMain = pidMain.reference - currentAltitude;
     int32_t errorTail = getQuadDiff(pidTail.reference);
     // Calculate change in time
     uint32_t deltaTime = time - prevTime;
@@ -104,7 +104,7 @@ void updateController(uint32_t time)
         rampMain(1);
         rampTail(3);
         // Update controllers
-        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain + currentAltitude());
+        controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain + currentAltitude;
         controlTail = updatePID(&pidTail, errorTail, deltaTime, offsetTail);
         // Clamp duty cycle values
         controlMain = clamp(controlMain, MIN_FLYING_DUTY, PERCENT);
