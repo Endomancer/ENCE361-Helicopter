@@ -2,6 +2,7 @@
 #include "adc.h"
 #include "buttons.h"
 #include "calibration.h"
+#include "circBufT.h"
 #include "clock.h"
 #include "config.h"
 #include "controller.h"
@@ -34,7 +35,7 @@ void vADCTask(void *pvParameters)
     {
         TickType_t xLastWakeTime = xTaskGetTickCount();
 
-        ADCProcessorTrigger(ADC_BASE, ADC_SEQUENCE);
+        triggerADC(); // Begin ADC conversion
 
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(ADC_SAMPLE_RATE_MS));
     }
