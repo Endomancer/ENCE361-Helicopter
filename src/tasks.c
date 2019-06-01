@@ -1,19 +1,14 @@
 #include "tasks.h"
 #include "adc.h"
 #include "buttons.h"
+#include "calibration.h"
 #include "clock.h"
+#include "config.h"
+#include "controller.h"
 #include "display.h"
 #include "quad.h"
-#include "config.h"
 #include "uart.h"
-#include "pwm.h"
-#include "pid.h"
-#include "controller.h"
-#include "calibration.h"
 
-#define STACK_SIZE 64
-
-int32_t desiredAltitude, desiredYaw = 0;
 typedef enum
 {
     NORMAL,
@@ -31,7 +26,7 @@ typedef enum
 
 TaskHandle_t xCalibrationHandle = NULL; // Calibration task handler
 TaskHandle_t xDisplayHandle = NULL;     // Display task handler
-TaskHandle_t xUARTHandle = NULL;        //UART task handler
+TaskHandle_t xUARTHandle = NULL;        // UART task handler
 
 void vADCTask(void *pvParameters)
 {
@@ -120,6 +115,18 @@ void vCalibrationTask(void *pvParameters)
         xTaskNotify(xUARTHandle, CALIBRATE, eSetValueWithOverwrite);
         // Block task indefinitely until another calibration is requested
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    }
+}
+
+void vControllerTask(void *pvParameters)
+{
+    while (1)
+    {
+        TickType_t xLastWakeTime = xTaskGetTickCount();
+
+        updateController(xTaskGetTickCount());
+
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONTROLLER_UPDATE_RATE_MS));
     }
 }
 
@@ -255,25 +262,13 @@ void vUARTTask(void *pvParameters)
     }
 }
 
-void vControllerTask(void *pvParameters)
-{
-    while (1)
-    {
-        TickType_t xLastWakeTime = xTaskGetTickCount();
-
-        updateController(xTaskGetTickCount());
-
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(CONTROLLER_UPDATE_RATE_MS));
-    }
-}
-
 void createTasks()
 {
     // Create tasks
-    xTaskCreate(vADCTask, "Sample ADC", STACK_SIZE, NULL, 1, NULL);
-    xTaskCreate(vButtonsTask, "Poll Buttons", STACK_SIZE, NULL, 1, NULL);
-    xTaskCreate(vCalibrationTask, "Calibrate", STACK_SIZE, NULL, 1, &xCalibrationHandle);
-    xTaskCreate(vDisplayTask, "Display", STACK_SIZE, NULL, 1, &xDisplayHandle);
-    xTaskCreate(vUARTTask, "UART", STACK_SIZE, NULL, 1, &xUARTHandle);
-    xTaskCreate(vControllerTask, "PID Controllers", STACK_SIZE, NULL, 1, NULL);
+    xTaskCreate(vADCTask, "Sample ADC", configMINIMAL_STACK_SIZE, NULL, 4, NULL);
+    xTaskCreate(vButtonsTask, "Poll Buttons", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+    xTaskCreate(vCalibrationTask, "Calibrate", configMINIMAL_STACK_SIZE, NULL, 2, &xCalibrationHandle);
+    xTaskCreate(vControllerTask, "PID Controllers", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+    xTaskCreate(vDisplayTask, "Display", configMINIMAL_STACK_SIZE, NULL, 1, &xDisplayHandle);
+    xTaskCreate(vUARTTask, "UART", configMINIMAL_STACK_SIZE, NULL, 1, &xUARTHandle);
 }
