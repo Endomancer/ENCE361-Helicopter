@@ -20,11 +20,11 @@
 #define SLOT_COUNT 112 // Number of slots in disk
 #define ROT_COUNT (SLOT_COUNT * 4) // State changes per rotation
 
-#define UART_REFRESH_RATE_MS 100
+#define UART_REFRESH_RATE_MS 250
 
 #define BUTTON_POLL_RATE_MS 10
 
-#define DISPLAY_REFRESH_RATE_MS 10
+#define DISPLAY_REFRESH_RATE_MS 100
 
 #define CALIBRATION_SAMPLES 4
 #define CALIBRATION_SAMPLE_RATE_MS 300
