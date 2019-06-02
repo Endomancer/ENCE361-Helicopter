@@ -14,7 +14,15 @@
 #define ALTITUDE_H
 
 #include <stdint.h>
-#include "pid.h"
+
+// Controller states
+typedef enum
+{
+    LANDED,
+    SWEEPING,
+    FLYING,
+    LANDING
+} control_states_t;
 
 // Initialise controller
 void initController();

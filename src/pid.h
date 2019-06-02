@@ -14,15 +14,6 @@
 
 #include <stdint.h>
 
-// TODO: Yuck... but we don't have a better place to put it currently
-typedef enum
-{
-    LANDED,
-    SWEEPING,
-    FLYING,
-    LANDING
-} control_states_t;
-
 // PID structure
 typedef struct
 {
