@@ -22,6 +22,7 @@
 
 void SoftResetIntHandler();
 
+// Initialise soft reset button
 void initSoftReset()
 {
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
@@ -37,6 +38,7 @@ void initSoftReset()
     GPIOIntEnable(GPIO_PORTA_BASE, GPIO_INT_PIN_6);
 }
 
+// Soft reset interrupt handler
 void SoftResetIntHandler()
 {
     uint32_t intStatus = GPIOIntStatus(GPIO_PORTA_BASE, true);

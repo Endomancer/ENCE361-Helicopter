@@ -13,6 +13,7 @@
 #ifndef RESET_H
 #define RESET_H
 
+// Initialise soft reset button
 void initSoftReset();
 
 #endif
