@@ -15,7 +15,7 @@ Unlike the Percival, our helicopter was able to fly, but we stayed true to the h
 ![Helicopter](docs/heliboi.png)
 
 The designed controller uses two PI controllers to control the main and tail rotors of the helicopter. The controller references are ramped between the current and desired references to help with stability.
-Other notable design features include gain clamping, quadrature decoding and ADC sampling and averaging. The height, yaw and rotor duty cycles of the helicopter are transmitted over UART and shown on the OLED display. 
+Other notable design features include gain clamping, automatic altitude offset detection, quadrature decoding and ADC sampling and averaging. The height, yaw and rotor duty cycles of the helicopter are transmitted over UART and also shown on the OLED display. 
 
 Several [libraries](https://eng-git.canterbury.ac.nz/nro55/tiva-libraries) for the Tiva C series were used:
 
