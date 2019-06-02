@@ -6,6 +6,17 @@
 #include "circBufT.h"
 #include "config.h"
 
+// *******************************************************
+// adc.c
+//
+// Support for ADC usage on the Tiva TM4C123 Development Board.
+// Specifically using channel 9 to read values from an analog sensor.
+// 
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #define ADC_BASE ADC0_BASE
 #define ADC_SEQUENCE 3
 #define ADC_STEP 0

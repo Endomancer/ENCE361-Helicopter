@@ -1,3 +1,14 @@
+// *******************************************************
+//
+// pwm.c
+//
+// Support for PWM using the Tiva boards PWM peripherals.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include "pwm.h"
 #include <stdint.h>
 #include <stdbool.h>

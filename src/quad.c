@@ -1,3 +1,15 @@
+// *******************************************************
+//
+// quad.c
+//
+// Support for a quadrature encoder, not utilising the libraries
+// provided by TI on the Tiva board.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include "quad.h"
 #include <stdbool.h>
 #include "config.h"

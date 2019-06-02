@@ -1,3 +1,20 @@
+// *******************************************************
+//
+// tasks.c
+//
+// Support for all tasks required for the project, these are:
+//      - ADC
+//      - Buttons
+//      - Calibration
+//      - Controller
+//      - OLEDDisplay
+//      - UART
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include "tasks.h"
 #include "adc.h"
 #include "buttons.h"

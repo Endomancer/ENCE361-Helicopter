@@ -1,6 +1,18 @@
 #ifndef ROTORS_H
 #define ROTORS_H
 
+// *******************************************************
+//
+// rotors.c
+//
+// Support altering PWM duty cycles of each rotor on the 
+// helicopter.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include <stdint.h>
 
 // Initialise main and tail rotors

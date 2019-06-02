@@ -1,6 +1,17 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+// *******************************************************
+//
+// pid.h
+//
+// Support PID controllers with different types of input.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include <stdint.h>
 
 // TODO: Yuck... but we don't have a better place to put it currently

@@ -1,6 +1,18 @@
 #ifndef UART_H
 #define UART_H
 
+// *******************************************************
+//
+// uart.h
+//
+// Support for the UART peripheral on the Tiva Board,
+// specifically the USB UART0
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include <stdint.h>
 #include <stdbool.h>
 

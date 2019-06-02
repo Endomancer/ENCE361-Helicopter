@@ -12,6 +12,18 @@
 #ifndef QUAD_H
 #define QUAD_H
 
+// *******************************************************
+//
+// quad.h
+//
+// Support for a quadrature encoder, not utilising the libraries
+// provided by TI on the Tiva board.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include <stdint.h>
 
 // Initialise the quadrotor GPIO and interrupt handler

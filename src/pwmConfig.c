@@ -1,3 +1,15 @@
+// *******************************************************
+//
+// pwmConfig.c
+//
+// Configuration required for all possible PWM channels avaiale
+// on the Tiva board.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include "pwm.h"
 #include <stdbool.h>
 #include "inc/hw_memmap.h"

@@ -1,6 +1,19 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+// *******************************************************
+//
+// config.h
+//
+// A compilation of all assignment statements used in
+// the project.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
+
 /**********************************************************
  * This file provides easy access to commonly used values *
  **********************************************************/

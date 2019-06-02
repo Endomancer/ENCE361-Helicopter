@@ -1,3 +1,14 @@
+// *******************************************************
+// calibration.c
+//
+// Utilising the reference indicator of the rotaty encoder to calibrate
+// the encoder start position and altitude offset of the helicopter.
+// 
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include <stdint.h>
 #include <stdbool.h>
 #include "adc.h"
