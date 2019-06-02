@@ -9,6 +9,9 @@
 ## Project Description
 This repository contains the source code for the helicopter project in ENCE361. The project was based around the Tiva C Series  [TM4C123G LaunchPad](http://www.ti.com/tool/EK-TM4C123GXL) and the associated [Orbit BoosterPack](https://reference.digilentinc.com/orbit_boosterpack/orbit_boosterpack).
 
+Inspiration for this project was taken from the [Percival P.74](https://en.wikipedia.org/wiki/Percival_P.74), an experimental helicopter design with tip-jet driven rotors.
+Unlike the Percival, our helicopter was able to fly; however, we stayed true to the highly experimental design of the Percival by deciding to use FreeRTOS and implementing automatic offset detection in our controllers.
+
 ![Helicopter](docs/heliboi.png)
 
 The designed controller uses two PI controllers to control the main and tail rotors of the helicopter. The controller references are ramped between the current and desired references to help with stability.
@@ -57,7 +60,6 @@ Select ```CMake: Debug``` to configure the CMake and then click ```Build``` to b
 Changing the target from ```[all]``` to ```[program]``` will create the necessary .bin file and program the Tiva board.
 
 Remote debugging with OpenOCD can be accessed by selecting the debug tab (```ctrl+shift+d```), selecting ```Debug (OpenOCD)``` and clicking the ```Start Debugging``` button.
-
 
 ## Continuous Integration
 GitLab continuous integration is used to automatically configure and build the project.
