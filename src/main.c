@@ -42,9 +42,9 @@ int main(void)
     // Initialise peripherals
     init();
 
-    // Create the required tasks
+    // Create the required FreeRTOS tasks
     createTasks();
 
-    // Start the task scheduler
-    vTaskStartScheduler();
+    // Start the FreeRTOS task scheduler
+    startScheduler();
 }

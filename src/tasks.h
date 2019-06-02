@@ -18,9 +18,10 @@
 #ifndef TASKS_H
 #define TASKS_H
 
-#include "FreeRTOS.h"
-#include "task.h"
+// Create FreeRTOS tasks
+void createTasks();
 
-void createTasks(void);
+// Start the FreeRTOS task scheduler
+void startScheduler();
 
 #endif
