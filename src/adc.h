@@ -1,6 +1,17 @@
 #ifndef ADC_H
 #define ADC_H
 
+// *******************************************************
+// adc.h
+//
+// Support for ADC usage on the Tiva TM4C123 Development Board.
+// Specifically using channel 9 to read values from an analog sensor.
+// 
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include <stdint.h>
 #include <stdbool.h>
 

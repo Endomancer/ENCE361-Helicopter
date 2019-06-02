@@ -1,3 +1,16 @@
+// *******************************************************
+//
+// controller.c
+//
+// Support for PID controllers with various types of inputs
+// and functions.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
+
 #include "controller.h"
 #include "config.h"
 #include "adc.h"

@@ -1,4 +1,13 @@
-//* PID controller for heli project
+// *******************************************************
+//
+// pid.c
+//
+// Support PID controllers with different types of input.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
 
 #include "pid.h"
 #include "config.h"

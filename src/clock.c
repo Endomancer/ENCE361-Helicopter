@@ -1,3 +1,15 @@
+// *******************************************************
+//
+// clock.c
+//
+// Support for using the system clock on the
+//  Tiva processor.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include "clock.h"
 #include "driverlib/sysctl.h"
 #include "inc/hw_memmap.h"

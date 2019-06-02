@@ -1,6 +1,18 @@
 #ifndef PWMCONFIG_H
 #define PWMCONFIG_H
 
+// *******************************************************
+//
+// pwmConfig.h
+//
+// Configuration required for all possible PWM channels avaiale
+// on the Tiva board.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 // Available PWM outputs
 typedef enum pwm_outputs_t
 {

@@ -1,3 +1,15 @@
+// *******************************************************
+//
+// display.c
+//
+// Support the Tiva/orbit OLED display with functions for
+// different states.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include "display.h"
 #include "config.h"
 #include "OrbitOLEDInterface.h"

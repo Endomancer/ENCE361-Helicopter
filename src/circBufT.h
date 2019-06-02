@@ -6,11 +6,12 @@
 // circBufT.h
 //
 // Support for a circular buffer of uint32_t values on the
-//  Tiva processor.
-// P.J. Bones UCECE
-// Last modified:  7.3.2017
+//  Tiva processor using static assignments.
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
 //
 // *******************************************************
+
 #include <stdint.h>
 
 //*****************************************************************************
