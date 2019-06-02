@@ -43,6 +43,25 @@
 #define YAW_INCREMENT 15        // Adjust angle by 15 degrees
 #define YAW_OFFSET_MULTIPLIER (SCALING_FACTOR * 9 / 10)
 
+// Main rotor gains
+#define MAIN_FLYING_P_GAIN 65
+#define MAIN_FLYING_I_GAIN 10
+#define MAIN_FLYING_D_GAIN 0
+#define MAIN_LANDING_P_GAIN 50
+#define MAIN_LANDING_I_GAIN 4
+#define MAIN_LANDING_D_GAIN 0
+
+// Tail rotor gains
+#define TAIL_FLYING_P_GAIN 500
+#define TAIL_FLYING_I_GAIN 2
+#define TAIL_FLYING_D_GAIN 0
+#define TAIL_LANDING_P_GAIN 500
+#define TAIL_LANDING_I_GAIN 2
+#define TAIL_LANDING_D_GAIN 0
+#define TAIL_SWEEPING_P_GAIN 400
+#define TAIL_SWEEPING_I_GAIN 0
+#define TAIL_SWEEPING_D_GAIN 0
+
 // Calibration
 #define HEIGHT_THRESHOLD 2
 #define HEIGHT_REDUCTION 12

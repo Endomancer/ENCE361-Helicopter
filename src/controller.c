@@ -109,7 +109,7 @@ void updateController(uint32_t time)
             // Change state to flying
             offsetMain *= SCALING_FACTOR;
             changeMode(FLYING);
-            initPID(&pidTail, 500, 2, 0);
+            initPID(&pidTail, TAIL_FLYING_P_GAIN, TAIL_FLYING_I_GAIN, TAIL_FLYING_D_GAIN);
             pidTail.reference = getQuad();
         }
 
@@ -141,7 +141,7 @@ void updateController(uint32_t time)
         {
             if (pidMain.reference == 0 && pidTail.reference == 0)
             {
-                updateGains(&pidTail, 500, 4, 0);
+                updateGains(&pidTail, TAIL_LANDING_P_GAIN, TAIL_LANDING_I_GAIN, TAIL_LANDING_D_GAIN);
             }
             // Update controllers
             controlMain = updatePID(&pidMain, errorMain, deltaTime, offsetMain);
@@ -179,21 +179,21 @@ void changeMode(control_states_t newState)
     
     case SWEEPING:
         // Change the gains for sweeping
-        updateGains(&pidTail, 400, 0, 0);
+        updateGains(&pidTail, TAIL_SWEEPING_P_GAIN, TAIL_SWEEPING_I_GAIN, TAIL_SWEEPING_D_GAIN);
         break;
 
     case FLYING:
         // Change the gains for flying
-        updateGains(&pidMain, 65, 10, 0);
-        updateGains(&pidTail, 500, 2, 0);
+        updateGains(&pidMain, MAIN_FLYING_P_GAIN, MAIN_FLYING_I_GAIN, MAIN_FLYING_D_GAIN);
+        updateGains(&pidTail, TAIL_FLYING_P_GAIN, TAIL_FLYING_I_GAIN, TAIL_FLYING_D_GAIN);
         referenceMain = 0;
         referenceTail = 0;
         break;
 
     case LANDING:
         // Update gains for landing
-        updateGains(&pidMain, 50, 4, 0);
-        updateGains(&pidTail, 500, 2, 0);
+        updateGains(&pidMain, MAIN_LANDING_P_GAIN, MAIN_LANDING_I_GAIN, MAIN_LANDING_D_GAIN);
+        updateGains(&pidTail, TAIL_LANDING_P_GAIN, TAIL_LANDING_I_GAIN, TAIL_LANDING_D_GAIN);
         referenceMain = 0;
         referenceTail = 0;
         break;
