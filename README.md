@@ -9,8 +9,8 @@
 ## Project Description
 This repository contains the source code for the helicopter project in ENCE361. The project was based around the Tiva C Series  [TM4C123G LaunchPad](http://www.ti.com/tool/EK-TM4C123GXL) and the associated [Orbit BoosterPack](https://reference.digilentinc.com/orbit_boosterpack/orbit_boosterpack).
 
-Inspiration for this project was taken from the [Percival P.74](https://en.wikipedia.org/wiki/Percival_P.74), an experimental helicopter design with tip-jet driven rotors.
-Unlike the Percival, our helicopter was able to fly; however, we stayed true to the highly experimental design of the Percival by deciding to use FreeRTOS and implementing automatic offset detection in our controllers.
+Inspiration for this project was taken from the [Percival P.74](https://en.wikipedia.org/wiki/Percival_P.74), an innovative and experimental tip-jet rotor helicopter design that completely failed.
+Unlike the Percival, our helicopter was able to fly, but we stayed true to the highly innovative design of the Percival by using FreeRTOS and implementing automatic offset detection in our altitude controller.
 
 ![Helicopter](docs/heliboi.png)
 
