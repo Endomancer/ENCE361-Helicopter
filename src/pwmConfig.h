@@ -1,6 +1,3 @@
-#ifndef PWMCONFIG_H
-#define PWMCONFIG_H
-
 // *******************************************************
 //
 // pwmConfig.h
@@ -12,6 +9,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef PWMCONFIG_H
+#define PWMCONFIG_H
 
 // Available PWM outputs
 typedef enum pwm_outputs_t

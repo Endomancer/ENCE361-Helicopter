@@ -1,6 +1,3 @@
-#ifndef CIRCBUFT_H_
-#define CIRCBUFT_H_
-
 // *******************************************************
 //
 // circBufT.h
@@ -11,6 +8,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef CIRCBUFT_H_
+#define CIRCBUFT_H_
 
 #include <stdint.h>
 

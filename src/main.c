@@ -1,3 +1,14 @@
+// *******************************************************
+//
+// main.c
+//
+// The main function of the helicopter project.
+//
+// Edited for the helicopter project by Thu_am_group1
+// Last modified:  2.6.19
+//
+// *******************************************************
+
 #include <stdint.h>
 #include "adc.h"
 #include "buttons.h"
@@ -10,17 +21,6 @@
 #include "calibration.h"
 #include "controller.h"
 #include "reset.h"
-
-// *******************************************************
-//
-// main.c
-//
-// The main function of the helicopter project.
-//
-// Edited for the helicopter project by Thu_am_group1
-// Last modified:  2.6.19
-//
-// *******************************************************
 
 // Initialise peripherals
 void init()
@@ -39,10 +39,12 @@ void init()
 
 int main(void)
 {
+    // Initialise peripherals
     init();
 
+    // Create the required tasks
     createTasks();
 
-    // Start scheduler
+    // Start the task scheduler
     vTaskStartScheduler();
 }

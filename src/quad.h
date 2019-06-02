@@ -1,28 +1,25 @@
-/**
- * This quadrature decoder implementation concatenates the previous and
- * current input pin values and uses them as the address for a lookup table.
- * The lookup table contains direction values which are accumulated to
- * obtain an angle measurement.
- * Further details can be found at:
- * https://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino/
- * Clockwise corresponds to a positive rotation
- * Counter-Clockwise corresponds to a negative rotation
- **/
-
-#ifndef QUAD_H
-#define QUAD_H
-
-// *******************************************************
+// *************************************************************************
 //
 // quad.h
 //
-// Support for a quadrature encoder, not utilising the libraries
-// provided by TI on the Tiva board.
+// This quadrature decoder implementation concatenates the previous and
+// current input pin values and uses them as the address for a lookup table.
+// The lookup table contains direction values which are accumulated to
+// obtain an angle measurement.
+// Further details can be found at:
+// https://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino/
+// Clockwise corresponds to a positive rotation
+// Anticlockwise corresponds to a negative rotation
+// The quadrature decoder implementation provided in the TivaWare library
+// is not used.
 //
 // Edited for the helicopter project by Thu_am_group1
 // Last modified:  2.6.19
 //
-// *******************************************************
+// *************************************************************************
+
+#ifndef QUAD_H
+#define QUAD_H
 
 #include <stdint.h>
 

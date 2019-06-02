@@ -1,6 +1,3 @@
-#ifndef ADC_H
-#define ADC_H
-
 // *******************************************************
 // adc.h
 //
@@ -11,6 +8,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef ADC_H
+#define ADC_H
 
 #include <stdint.h>
 #include <stdbool.h>

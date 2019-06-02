@@ -1,6 +1,3 @@
-#ifndef CALIBRATION_H
-#define CALIBRATION_H
-
 // *******************************************************
 // calibration.h
 //
@@ -11,6 +8,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef CALIBRATION_H
+#define CALIBRATION_H
 
 #include <stdbool.h>
 #include <stdint.h>

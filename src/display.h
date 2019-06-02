@@ -1,6 +1,3 @@
-#ifndef DISPLAY_H
-#define DISPLAY_H
-
 // *******************************************************
 //
 // display.h
@@ -12,6 +9,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef DISPLAY_H
+#define DISPLAY_H
 
 #include <stdint.h>
 #include <stdbool.h>

@@ -1,6 +1,3 @@
-#ifndef UART_H
-#define UART_H
-
 // *******************************************************
 //
 // uart.h
@@ -12,6 +9,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef UART_H
+#define UART_H
 
 #include <stdint.h>
 #include <stdbool.h>

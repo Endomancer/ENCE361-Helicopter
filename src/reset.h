@@ -1,6 +1,3 @@
-#ifndef RESET_H
-#define RESET_H
-
 // *******************************************************
 //
 // reset.h
@@ -12,6 +9,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef RESET_H
+#define RESET_H
 
 void initSoftReset();
 

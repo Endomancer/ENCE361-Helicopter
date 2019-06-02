@@ -1,6 +1,3 @@
-#ifndef CLOCK_H
-#define CLOCK_H
-
 // *******************************************************
 //
 // clock.h
@@ -12,6 +9,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef CLOCK_H
+#define CLOCK_H
 
 #include <stdint.h>
 #include <stdbool.h>

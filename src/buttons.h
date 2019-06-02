@@ -1,6 +1,3 @@
-#ifndef BUTTONS_H_
-#define BUTTONS_H_
-
 // *******************************************************
 // buttons.h
 //
@@ -13,6 +10,9 @@
 // Last modified:  7.2.2018
 //
 // *******************************************************
+
+#ifndef BUTTONS_H_
+#define BUTTONS_H_
 
 #include <stdint.h>
 #include <stdbool.h>

@@ -1,11 +1,3 @@
-#include "adc.h"
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "driverlib/adc.h"
-#include "driverlib/sysctl.h"
-#include "circBufT.h"
-#include "config.h"
-
 // *******************************************************
 // adc.c
 //
@@ -16,6 +8,14 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#include "adc.h"
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
+#include "driverlib/adc.h"
+#include "driverlib/sysctl.h"
+#include "circBufT.h"
+#include "config.h"
 
 #define ADC_BASE ADC0_BASE
 #define ADC_SEQUENCE 3

@@ -1,6 +1,3 @@
-#ifndef PWM_H
-#define PWM_H
-
 // *******************************************************
 //
 // pwm.h
@@ -11,6 +8,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef PWM_H
+#define PWM_H
 
 #include <stdint.h>
 #include "pwmConfig.h"

@@ -10,14 +10,13 @@
 //
 // *******************************************************
 
-
 #include "controller.h"
-#include "config.h"
 #include "adc.h"
-#include "quad.h"
-#include "pid.h"
-#include "rotors.h"
 #include "calibration.h"
+#include "config.h"
+#include "pid.h"
+#include "quad.h"
+#include "rotors.h"
 
 static controller_t pidMain;
 static controller_t pidTail;
@@ -67,11 +66,12 @@ void updateController(uint32_t time)
     switch (state)
     {
     case LANDED:
+        // Turn off rotors
         controlMain = 0;
         controlTail = 0;
         break;
 
-    case SWEEPING: // TODO
+    case SWEEPING:
         // Check if the reference point has been found
         if (!referenceFound())
         {
@@ -92,9 +92,9 @@ void updateController(uint32_t time)
             controlTail = clamp(controlTail, MIN_FLYING_DUTY, 50);
             break;
         }
-        // if the main offset hasn't been found
         else if (!foundThreshold)
         {
+            // Continue trying to find the height offset
             foundThreshold = findThreshold(&offsetMain);
             controlMain = offsetMain;
             // Update controllers
@@ -104,9 +104,9 @@ void updateController(uint32_t time)
             controlTail = clamp(controlTail, MIN_FLYING_DUTY, PERCENT);
             break;
         }
-        // change state fo flying
         else
         {
+            // Change state to flying
             offsetMain *= SCALING_FACTOR;
             changeMode(FLYING);
             initPID(&pidTail, 500, 2, 0);
@@ -114,6 +114,7 @@ void updateController(uint32_t time)
         }
 
     case FLYING:
+        // Ramp controller references
         rampMain(1);
         rampTail(3);
         // Update controllers
@@ -125,7 +126,8 @@ void updateController(uint32_t time)
         break;
 
     case LANDING:
-        rampMain(1); // TODO : Find appropriate landing speed
+        // Ramp controller references
+        rampMain(1);
         rampTail(5);
 
         if (pidMain.reference == 0 && errorTail <= 5 && errorTail > -5)

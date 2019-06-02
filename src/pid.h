@@ -1,6 +1,3 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
-
 // *******************************************************
 //
 // pid.h
@@ -11,6 +8,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 #include <stdint.h>
 

@@ -1,6 +1,3 @@
-#ifndef ALTITUDE_H
-#define ALTITUDE_H
-
 // *******************************************************
 //
 // controller.h
@@ -12,6 +9,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef ALTITUDE_H
+#define ALTITUDE_H
 
 #include <stdint.h>
 #include "pid.h"

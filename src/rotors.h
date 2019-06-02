@@ -1,6 +1,3 @@
-#ifndef ROTORS_H
-#define ROTORS_H
-
 // *******************************************************
 //
 // rotors.c
@@ -12,6 +9,9 @@
 // Last modified:  2.6.19
 //
 // *******************************************************
+
+#ifndef ROTORS_H
+#define ROTORS_H
 
 #include <stdint.h>
 
